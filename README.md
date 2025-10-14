@@ -1,3 +1,2 @@
 # gestor-videojuegos
-repositorio de prueba para ver el funcionamiento
-Hola Carlos
+repositorio para el gestor de videojuegos
