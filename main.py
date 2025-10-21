@@ -79,6 +79,7 @@ def mostrar_juegos(juegos):
         def al_presionar():
             borrar_juego(indice)
             mostrar_juegos(videojuegos)
+            print("Has pulsado borrar")
 
         etiqueta_borrar = tk.Button(ventana, text="x", command=al_presionar)
 
