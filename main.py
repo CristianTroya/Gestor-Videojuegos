@@ -133,7 +133,7 @@ def ventana_añadir():
     rate_entry.grid(row=3, column=0)
     type_entry.grid(row=3, column=1)
     completed_entry.grid(row=3, column=2)
-    
+     #jklsad flkjsald
     def al_presionar():
         añadir_juego(
         title_entry.get(), 
