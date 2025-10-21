@@ -99,6 +99,7 @@ def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_medi
     videojuegos.append(juego)
 
     mostrar_juegos(videojuegos)
+    print('Has pulsado añadir juego!')
 
 def ventana_añadir():
     nueva_ventana = tk.Toplevel(ventana)
