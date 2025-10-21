@@ -1,6 +1,3 @@
-
-
-
 import sqlite3 # Importamos la librería
 
 # --- PASO 1: Conectar a la base de datos ---
@@ -31,4 +28,3 @@ conexion.commit()
 conexion.close()
 
 print("Tabla 'Tarea' creada con éxito (si no existía ya).")
-
