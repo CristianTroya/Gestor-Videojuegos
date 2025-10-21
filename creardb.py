@@ -2,7 +2,7 @@ import sqlite3 # Importamos la librería
 
 # --- PASO 1: Conectar a la base de datos ---
 # Se crea el archivo 'tareas.db' si no existe
-conexion = sqlite3.connect('tareas.db')
+conexion = sqlite3.connect('videojuego.db')
 
 # Para poder enviar comandos, necesitamos un "cursor"
 cursor = conexion.cursor()
