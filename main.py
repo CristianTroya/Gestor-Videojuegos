@@ -33,8 +33,8 @@ ventana = tk.Tk()
 ventana.title("Gestor de videojuegos")
 ventana.geometry("1280x720")
 
-videojuego1 = Videojuego("SilkGod", "Silkgod mejor juego del año", "30h", "11/10", "tipo")
-videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "tipo")
+videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls")
+videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
 videojuegos = [videojuego1, videojuego2]
 
 # Buscador
@@ -50,54 +50,54 @@ def buscar(entrada):
 
     return resultado
 
+frame_buscador = tk.Frame(ventana)
+frame_buscador.grid()
 
-etiqueta_buscador = tk.Entry(ventana, width=50)
-etiqueta_buscador.grid(row=0, column=3)
-boton_buscador = tk.Button(ventana, text="Buscar")
+etiqueta_buscador = tk.Entry(frame_buscador, width=50)
+etiqueta_buscador.grid(row=0, column=1 )
+boton_buscador = tk.Button(frame_buscador, text="Buscar")
 
-def mostrar_juegos():
+def borrar_juego(indice):
+    videojuegos.pop(indice - 1)
+
+def mostrar_juegos(juegos):
     # Creamos la información para cada videojuego
-    # usamos el index i para saltar una fila por juego
 
     # Creamos el frame
     frame_juegos = tk.Frame(ventana)
     frame_juegos.grid()
 
-    for indice, v in enumerate(videojuegos):
+    for indice, v in enumerate(juegos):
         indice += 1 # 0 está reservado para el buscador
 
-        frame = tk.Frame(frame_juegos)
-        frame.grid(row=indice, sticky="nsew")
-
-        etiqueta_titulo = tk.Label(frame, text=v.titulo)
-        etiqueta_desc = tk.Label(frame, text=v.descripcion)
-        etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
-        etiqueta_nota = tk.Label(frame, text=v.nota_media)
-        etiqueta_tipo = tk.Label(frame, text=v.tipo)
+        etiqueta_titulo = tk.Label(ventana, text=v.titulo)
+        etiqueta_desc = tk.Label(ventana, text=v.descripcion)
+        etiqueta_tiempo_estimado = tk.Label(ventana, text=v.tiempo_estimado)
+        etiqueta_nota = tk.Label(ventana, text=v.nota_media)
+        etiqueta_tipo = tk.Label(ventana, text=v.tipo)
 
         def al_presionar():
-            print(indice)
-            videojuegos.pop(indice - 1) # añadimos +1 antes
-            frame.grid_remove()
+            borrar_juego(indice)
+            mostrar_juegos(videojuegos)
 
-        etiqueta_borrar = tk.Button(frame, text="x", command=al_presionar)
+        etiqueta_borrar = tk.Button(ventana, text="x", command=al_presionar)
 
-        etiqueta_titulo.grid(row=indice, column=0)
-        etiqueta_desc.grid(row=indice, column=1)
-        etiqueta_tiempo_estimado.grid(row=indice, column=2)
-        etiqueta_nota.grid(row=indice, column=3)
-        etiqueta_tipo.grid(row=indice, column=4)
-        etiqueta_borrar.grid(row=indice, column=5)
+        etiqueta_titulo.grid(row=indice, column=0, sticky="w")
+        etiqueta_desc.grid(row=indice, column=1, sticky="w")
+        etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w")
+        etiqueta_nota.grid(row=indice, column=4, sticky="w")
+        etiqueta_tipo.grid(row=indice, column=5, sticky="w")
+        etiqueta_borrar.grid(row=indice, column=6, sticky="w")
 
     v.fila = indice
 
-mostrar_juegos()
+mostrar_juegos(videojuegos)
 
 def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_media: float, tipo: str, completado: bool =False):
     juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
-
     videojuegos.append(juego)
-    mostrar_juegos()
+
+    mostrar_juegos(videojuegos)
 
 def ventana_añadir():
     nueva_ventana = tk.Toplevel(ventana)
