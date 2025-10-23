@@ -58,47 +58,49 @@ etiqueta_buscador.grid(row=0, column=1 )
 boton_buscador = tk.Button(frame_buscador, text="Buscar")
 
 def borrar_juego(indice):
-    videojuegos.pop(indice - 1)
+    videojuegos.pop(indice)
 
-def mostrar_juegos(juegos):
-    # Creamos la información para cada videojuego
+frame_juegos = tk.Frame(ventana)
+frame_juegos.grid(padx=10, pady=10)
 
-    # Creamos el frame
-    frame_juegos = tk.Frame(ventana)
-    frame_juegos.grid()
+def mostrar_juegos(juegos, frame):
+    # limpiamos los elementos al actualizarlos
+    for elemento in frame.winfo_children():
+        elemento.destroy()
+
+    def al_presionar(indice):
+        borrar_juego(indice)
+        mostrar_juegos(videojuegos, frame_juegos)
+        print("Has pulsado borrar!")
 
     for indice, v in enumerate(juegos):
-        indice += 1 # 0 está reservado para el buscador
+        etiqueta_titulo = tk.Label(frame, text=v.titulo)
+        etiqueta_desc = tk.Label(frame, text=v.descripcion)
+        etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
+        etiqueta_nota = tk.Label(frame, text=v.nota_media)
+        etiqueta_tipo = tk.Label(frame, text=v.tipo)
 
-        etiqueta_titulo = tk.Label(ventana, text=v.titulo)
-        etiqueta_desc = tk.Label(ventana, text=v.descripcion)
-        etiqueta_tiempo_estimado = tk.Label(ventana, text=v.tiempo_estimado)
-        etiqueta_nota = tk.Label(ventana, text=v.nota_media)
-        etiqueta_tipo = tk.Label(ventana, text=v.tipo)
-
-        def al_presionar():
-            borrar_juego(indice)
-            mostrar_juegos(videojuegos)
-            print("Has pulsado borrar!")
-
-        etiqueta_borrar = tk.Button(ventana, text="x", command=al_presionar)
+        # usamos lambda para que el índice se acutlice
+        # de ahí que la función al_presionar esté fuera del bucle for
+        etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=indice: al_presionar(i))
 
         etiqueta_titulo.grid(row=indice, column=0, sticky="w")
-        etiqueta_desc.grid(row=indice, column=1, sticky="w")
-        etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w")
-        etiqueta_nota.grid(row=indice, column=4, sticky="w")
-        etiqueta_tipo.grid(row=indice, column=5, sticky="w")
-        etiqueta_borrar.grid(row=indice, column=6, sticky="w")
+        etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
+        etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=10)
+        etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=10)
+        etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=10)
+        etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
 
-    v.fila = indice
+        v.fila = indice
 
-mostrar_juegos(videojuegos)
+mostrar_juegos(videojuegos, frame_juegos)
+
 
 def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_media: float, tipo: str, completado: bool =False):
     juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
     videojuegos.append(juego)
 
-    mostrar_juegos(videojuegos)
+    mostrar_juegos(videojuegos, frame_juegos)
     print("Has pulsado añadir juego!")
 
 def ventana_añadir():
@@ -133,7 +135,7 @@ def ventana_añadir():
     rate_entry.grid(row=3, column=0)
     type_entry.grid(row=3, column=1)
     completed_entry.grid(row=3, column=2)
-     #jklsad flkjsald
+
     def al_presionar():
         añadir_juego(
         title_entry.get(), 
