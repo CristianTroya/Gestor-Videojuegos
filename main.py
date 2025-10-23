@@ -104,6 +104,8 @@ def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_medi
     print("Has pulsado añadir juego!")
 
 def ventana_añadir():
+    print("Al presionado añadir (se ha creado una ventana)")
+    
     nueva_ventana = tk.Toplevel(ventana)
     nueva_ventana.title("Añadir videojuego")
     nueva_ventana.geometry("700x300")
@@ -144,7 +146,6 @@ def ventana_añadir():
         rate_entry.get(), 
         type_entry.get(), 
         checkbox_var.get())
-        print("Al presionado añadir (se ha creado una ventana)")
 
     añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
     añadir.grid(row=4, column=1)
