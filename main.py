@@ -4,7 +4,7 @@ class Videojuego:
     """
     Clase Videojuego, un videojuego dentro del gestor
     """
-    def __init__(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=False):
+    def __init__(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=0):
         """
         Inicializamos una nueva instancia
         - titulo: el título del juego `string`
@@ -138,6 +138,9 @@ def ventana_añadir():
     type_entry.grid(row=3, column=1)
     completed_entry.grid(row=3, column=2)
 
+    def autenticidad(bool):
+        if bool==True: return 1
+        return 0
     def al_presionar():
         añadir_juego(
         title_entry.get(), 
@@ -145,7 +148,7 @@ def ventana_añadir():
         estimated_entry.get(), 
         rate_entry.get(), 
         type_entry.get(), 
-        checkbox_var.get())
+        autenticidad(checkbox_var.get()))
 
     añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
     añadir.grid(row=4, column=1)
