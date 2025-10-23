@@ -1,4 +1,5 @@
 import tkinter as tk
+import sqlite3
 
 class Videojuego:
     """
@@ -29,132 +30,136 @@ class Videojuego:
     def __str__(self):
      return f"[{self.id}] {self.titulo}"
 
-ventana = tk.Tk()
-ventana.title("Gestor de videojuegos")
-ventana.geometry("1280x720")
+class App:
+    def __init__(self, ventana):
+        self.ventana = ventana
+        self.ventana.title("Gestor de videojuegos")
 
-videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls")
-videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
-videojuegos = [videojuego1, videojuego2]
+        videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls")
+        videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
+        videojuegos = [videojuego1, videojuego2]
 
-# Buscador
-def buscar(entrada):
-    entrada = entrada.lower()
-    resultado = -1 # -1 indica que no se ha encontrado nada
+        # Buscador
+        def buscar(entrada):
+            entrada = entrada.lower()
+            resultado = -1 # -1 indica que no se ha encontrado nada
 
-    # Comprobamos en cada videojuego si su titulo empieza por la entrada
-    for juego in videojuegos:
-        if juego.titulo.lower().startswith(entrada):
-            resultado = juego.fila
-            break
+            # Comprobamos en cada videojuego si su titulo empieza por la entrada
+            for juego in videojuegos:
+                if juego.titulo.lower().startswith(entrada):
+                    resultado = juego.fila
+                    break
 
-    return resultado
+            return resultado
 
-frame_buscador = tk.Frame(ventana)
-frame_buscador.grid()
+        frame_buscador = tk.Frame(self.ventana)
+        frame_buscador.grid()
 
-etiqueta_buscador = tk.Entry(frame_buscador, width=50)
-etiqueta_buscador.grid(row=0, column=1 )
-boton_buscador = tk.Button(frame_buscador, text="Buscar")
+        etiqueta_buscador = tk.Entry(frame_buscador, width=50)
+        etiqueta_buscador.grid(row=0, column=1 )
+        boton_buscador = tk.Button(frame_buscador, text="Buscar")
 
-def borrar_juego(indice):
-    videojuegos.pop(indice)
+        def borrar_juego(indice):
+            videojuegos.pop(indice)
 
-frame_juegos = tk.Frame(ventana)
-frame_juegos.grid(padx=10, pady=10)
+        frame_juegos = tk.Frame(self.ventana)
+        frame_juegos.grid(padx=10, pady=10)
 
-def mostrar_juegos(juegos, frame):
-    # limpiamos los elementos al actualizarlos
-    for elemento in frame.winfo_children():
-        elemento.destroy()
+        def mostrar_juegos(juegos, frame):
+            # limpiamos los elementos al actualizarlos
+            for elemento in frame.winfo_children():
+                elemento.destroy()
 
-    def al_presionar(indice):
-        borrar_juego(indice)
+            def al_presionar(indice):
+                borrar_juego(indice)
+                mostrar_juegos(videojuegos, frame_juegos)
+                print("Has pulsado borrar!")
+
+            for indice, v in enumerate(juegos):
+                etiqueta_titulo = tk.Label(frame, text=v.titulo)
+                etiqueta_desc = tk.Label(frame, text=v.descripcion)
+                etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
+                etiqueta_nota = tk.Label(frame, text=v.nota_media)
+                etiqueta_tipo = tk.Label(frame, text=v.tipo)
+
+                # usamos lambda para que el índice se acutlice
+                # de ahí que la función al_presionar esté fuera del bucle for
+                etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=indice: al_presionar(i))
+
+                etiqueta_titulo.grid(row=indice, column=0, sticky="w")
+                etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
+                etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=10)
+                etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=10)
+                etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=10)
+                etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
+
+                v.fila = indice
+
         mostrar_juegos(videojuegos, frame_juegos)
-        print("Has pulsado borrar!")
-
-    for indice, v in enumerate(juegos):
-        etiqueta_titulo = tk.Label(frame, text=v.titulo)
-        etiqueta_desc = tk.Label(frame, text=v.descripcion)
-        etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
-        etiqueta_nota = tk.Label(frame, text=v.nota_media)
-        etiqueta_tipo = tk.Label(frame, text=v.tipo)
-
-        # usamos lambda para que el índice se acutlice
-        # de ahí que la función al_presionar esté fuera del bucle for
-        etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=indice: al_presionar(i))
-
-        etiqueta_titulo.grid(row=indice, column=0, sticky="w")
-        etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
-        etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=10)
-        etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=10)
-        etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=10)
-        etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
-
-        v.fila = indice
-
-mostrar_juegos(videojuegos, frame_juegos)
 
 
-def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_media: float, tipo: str, completado: bool =False):
-    juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
-    videojuegos.append(juego)
+        def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_media: float, tipo: str, completado: bool =False):
+            juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
+            videojuegos.append(juego)
 
-    mostrar_juegos(videojuegos, frame_juegos)
-    print("Has pulsado añadir juego!")
+            mostrar_juegos(videojuegos, frame_juegos)
+            print("Has pulsado añadir juego!")
 
-def ventana_añadir():
-    print("Al presionado añadir (se ha creado una ventana)")
-    
-    nueva_ventana = tk.Toplevel(ventana)
-    nueva_ventana.title("Añadir videojuego")
-    nueva_ventana.geometry("700x300")
+        def ventana_añadir():
+            print("Al presionado añadir (se ha creado una ventana)")
+            
+            nueva_ventana = tk.Toplevel(self.ventana)
+            nueva_ventana.title("Añadir videojuego")
+            nueva_ventana.geometry("700x300")
 
-    title = tk.Label(nueva_ventana, text="Título del videojuego")
-    desc = tk.Label(nueva_ventana, text="Descripción del videojuego")
-    estimated_time = tk.Label(nueva_ventana, text="Tiempo estimado para completarlo")
-    rate = tk.Label(nueva_ventana, text="Nota media")
-    type = tk.Label(nueva_ventana, text="Tipo de videojuego")
+            title = tk.Label(nueva_ventana, text="Título del videojuego")
+            desc = tk.Label(nueva_ventana, text="Descripción del videojuego")
+            estimated_time = tk.Label(nueva_ventana, text="Tiempo estimado para completarlo")
+            rate = tk.Label(nueva_ventana, text="Nota media")
+            type = tk.Label(nueva_ventana, text="Tipo de videojuego")
 
-    title.grid(row=0, column=0)
-    desc.grid (row=0, column=1)
-    estimated_time.grid(row=0, column=2)
-    rate.grid(row= 2, column=0)
-    type.grid(row=2, column=1)
+            title.grid(row=0, column=0)
+            desc.grid (row=0, column=1)
+            estimated_time.grid(row=0, column=2)
+            rate.grid(row= 2, column=0)
+            type.grid(row=2, column=1)
 
-    title_entry = tk.Entry(nueva_ventana, text="Título del videojuego")
-    desc_entry = tk.Entry(nueva_ventana, text="Descripción del videojuego")
-    estimated_entry= tk.Entry(nueva_ventana, text="Tiempo estimado para completarlo")
-    rate_entry = tk.Entry(nueva_ventana, text="Nota media")
-    type_entry = tk.Entry(nueva_ventana, text="Tipo de videojuego")
+            title_entry = tk.Entry(nueva_ventana, text="Título del videojuego")
+            desc_entry = tk.Entry(nueva_ventana, text="Descripción del videojuego")
+            estimated_entry= tk.Entry(nueva_ventana, text="Tiempo estimado para completarlo")
+            rate_entry = tk.Entry(nueva_ventana, text="Nota media")
+            type_entry = tk.Entry(nueva_ventana, text="Tipo de videojuego")
 
-    checkbox_var = tk.BooleanVar()
-    completed_entry = tk.Checkbutton(nueva_ventana, text="¿Completado?", variable=checkbox_var)
+            checkbox_var = tk.BooleanVar()
+            completed_entry = tk.Checkbutton(nueva_ventana, text="¿Completado?", variable=checkbox_var)
 
-    title_entry.grid(row=1, column=0)
-    desc_entry.grid (row=1, column=1)
-    estimated_entry.grid(row=1, column=2)
-    rate_entry.grid(row=3, column=0)
-    type_entry.grid(row=3, column=1)
-    completed_entry.grid(row=3, column=2)
+            title_entry.grid(row=1, column=0)
+            desc_entry.grid (row=1, column=1)
+            estimated_entry.grid(row=1, column=2)
+            rate_entry.grid(row=3, column=0)
+            type_entry.grid(row=3, column=1)
+            completed_entry.grid(row=3, column=2)
 
-    def autenticidad(bool):
-        if bool==True: return 1
-        return 0
-    def al_presionar():
-        añadir_juego(
-        title_entry.get(), 
-        desc_entry.get(), 
-        estimated_entry.get(), 
-        rate_entry.get(), 
-        type_entry.get(), 
-        autenticidad(checkbox_var.get()))
+            def autenticidad(bool):
+                if bool==True: return 1
+                return 0
+            def al_presionar():
+                añadir_juego(
+                title_entry.get(), 
+                desc_entry.get(), 
+                estimated_entry.get(), 
+                rate_entry.get(), 
+                type_entry.get(), 
+                autenticidad(checkbox_var.get()))
 
-    añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
-    añadir.grid(row=4, column=1)
+            añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
+            añadir.grid(row=4, column=1)
 
-# Añadir juego
-boton_añadir = tk.Button(ventana, text="Añadir juego", command=ventana_añadir)
-boton_añadir.grid(row=0, column=4)
+        # Añadir juego
+        boton_añadir = tk.Button(self.ventana, text="Añadir juego", command=ventana_añadir)
+        boton_añadir.grid(row=0, column=4)
 
-ventana.mainloop()
+if __name__ == "__main__":
+    ventana_principal = tk.Tk()
+    app = App(ventana_principal)
+    ventana_principal.mainloop()
