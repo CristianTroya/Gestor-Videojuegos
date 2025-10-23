@@ -144,6 +144,7 @@ def ventana_añadir():
         rate_entry.get(), 
         type_entry.get(), 
         checkbox_var.get())
+        print("Al presionado añadir (se ha creado una ventana)")
 
     añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
     añadir.grid(row=4, column=1)
