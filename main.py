@@ -33,6 +33,7 @@ class Videojuego:
 class App:
     def __init__(self, ventana):
         self.ventana = ventana
+        self.ventana.geometry("900x550")
         self.ventana.title("Gestor de videojuegos")
 
         videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls")
@@ -52,18 +53,19 @@ class App:
 
             return resultado
 
-        frame_buscador = tk.Frame(self.ventana)
-        frame_buscador.grid()
+        frame_nav = tk.Frame(self.ventana)
+        frame_nav.grid(pady=10)
 
-        etiqueta_buscador = tk.Entry(frame_buscador, width=50)
-        etiqueta_buscador.grid(row=0, column=1 )
-        boton_buscador = tk.Button(frame_buscador, text="Buscar")
+        etiqueta_buscador = tk.Entry(frame_nav, width=50)
+        etiqueta_buscador.grid(row=0, column=0, padx=10)
+        boton_buscador = tk.Button(frame_nav, text="Buscar")
+        boton_buscador.grid(row=0, column=1)
 
         def borrar_juego(indice):
             videojuegos.pop(indice)
 
         frame_juegos = tk.Frame(self.ventana)
-        frame_juegos.grid(padx=10, pady=10)
+        frame_juegos.grid(padx=10, pady=10, sticky="w")
 
         def mostrar_juegos(juegos, frame):
             # limpiamos los elementos al actualizarlos
@@ -106,7 +108,7 @@ class App:
             print("Has pulsado añadir juego!")
 
         def ventana_añadir():
-            print("Al presionado añadir (se ha creado una ventana)")
+            print("Has presionado añadir (se ha creado una ventana)")
             
             nueva_ventana = tk.Toplevel(self.ventana)
             nueva_ventana.title("Añadir videojuego")
@@ -156,8 +158,9 @@ class App:
             añadir.grid(row=4, column=1)
 
         # Añadir juego
-        boton_añadir = tk.Button(self.ventana, text="Añadir juego", command=ventana_añadir)
-        boton_añadir.grid(row=0, column=4)
+        frame_nav.columnconfigure(2, minsize=370)
+        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=ventana_añadir)
+        boton_añadir.grid(row=0, column=2, sticky="e")
 
 if __name__ == "__main__":
     ventana_principal = tk.Tk()
