@@ -113,12 +113,15 @@ class App:
             nueva_ventana = tk.Toplevel(self.ventana)
             nueva_ventana.title("Añadir videojuego")
             nueva_ventana.geometry("700x300")
+        
+            frame_añadir = tk.Frame(nueva_ventana)
+            frame_añadir.grid(padx=10, pady=10)
 
-            title = tk.Label(nueva_ventana, text="Título del videojuego")
-            desc = tk.Label(nueva_ventana, text="Descripción del videojuego")
-            estimated_time = tk.Label(nueva_ventana, text="Tiempo estimado para completarlo")
-            rate = tk.Label(nueva_ventana, text="Nota media")
-            type = tk.Label(nueva_ventana, text="Tipo de videojuego")
+            title = tk.Label(frame_añadir, text="Título del videojuego")
+            desc = tk.Label(frame_añadir, text="Descripción del videojuego")
+            estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
+            rate = tk.Label(frame_añadir, text="Nota media")
+            type = tk.Label(frame_añadir, text="Tipo de videojuego")
 
             title.grid(row=0, column=0)
             desc.grid (row=0, column=1)
@@ -126,14 +129,14 @@ class App:
             rate.grid(row= 2, column=0)
             type.grid(row=2, column=1)
 
-            title_entry = tk.Entry(nueva_ventana, text="Título del videojuego")
-            desc_entry = tk.Entry(nueva_ventana, text="Descripción del videojuego")
-            estimated_entry= tk.Entry(nueva_ventana, text="Tiempo estimado para completarlo")
-            rate_entry = tk.Entry(nueva_ventana, text="Nota media")
-            type_entry = tk.Entry(nueva_ventana, text="Tipo de videojuego")
+            title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
+            desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
+            estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
+            rate_entry = tk.Entry(frame_añadir, text="Nota media")
+            type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
 
             checkbox_var = tk.BooleanVar()
-            completed_entry = tk.Checkbutton(nueva_ventana, text="¿Completado?", variable=checkbox_var)
+            completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
 
             title_entry.grid(row=1, column=0)
             desc_entry.grid (row=1, column=1)
