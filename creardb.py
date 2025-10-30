@@ -12,6 +12,7 @@ cursor = conexion.cursor()
 comando_sql = """
 CREATE TABLE IF NOT EXISTS Videojuego (
     id INTEGER PRIMARY KEY,
+    Nombre TEXT NOT NULL,
     Descripción TEXT NOT NULL,
     Tiempo_estimado INTEGER NOT NULL,
     Tipo TEXT NOT NULL,
