@@ -13,7 +13,7 @@ class Videojuego:
         - tiempo_estimado: tiempo estimado para completar el juego `integer`
         - nota_media: nota media del juego sobre 10 `float`
         - tipo: tipo o género del juego `string`
-        - completado: ¿Se ha completado el juego? `bool`
+        - completado: ¿Se ha completado el juego? `1` o `0`
         """
 
         self.id = None
@@ -100,7 +100,22 @@ class App:
         mostrar_juegos(videojuegos, frame_juegos)
 
 
-        def añadir_juego(titulo: str, descripcion: str, tiempo_estimado: int, nota_media: float, tipo: str, completado: bool =False):
+        def añadir_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+            for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
+                if str(parametro) == "":
+                    print("Uno o más parámetros están vacíos, no se ha añadido el juego")
+                    return
+
+            try:
+                int(tiempo_estimado)
+                int(completado)
+                float(nota_media)
+
+            except ValueError:
+                print("Alguno de los campos numéricos no lo son:")
+                print("Tiempo estimado: int, completado: int, nota: real")
+                return
+
             juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
             videojuegos.append(juego)
 
