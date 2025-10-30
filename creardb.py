@@ -10,12 +10,13 @@ cursor = conexion.cursor()
 # --- PASO 2: Ejecutar un comando SQL ---
 # Usamos un string multilínea con triples comillas para que el SQL sea más legible
 comando_sql = """
-CREATE TABLE IF NOT EXISTS Tarea (
+CREATE TABLE IF NOT EXISTS Videojuego (
     id INTEGER PRIMARY KEY,
-    descripcion TEXT NOT NULL,
-    fecha_limite TEXT,
-    prioridad TEXT,
-    completada INTEGER
+    Descripción TEXT NOT NULL,
+    Tiempo_estimado INTEGER NOT NULL,
+    Tipo TEXT NOT NULL,
+    Completado INTEGER NOT NULL,
+    Nota_media REAL NOT NULL
 )
 """
 # 'IF NOT EXISTS' evita que nos dé un error si la tabla ya ha sido creada
@@ -27,4 +28,4 @@ conexion.commit()
 # --- PASO 3: Cerrar la conexión ---
 conexion.close()
 
-print("Tabla 'Tarea' creada con éxito (si no existía ya).")
+print("Tabla 'Videojuego' creada con éxito (si no existía ya).")
