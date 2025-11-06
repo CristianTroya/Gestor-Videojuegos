@@ -49,19 +49,18 @@ class App:
         etiqueta_buscador.grid(row=0, column=0, padx=10)
 
         # Buscador
-        def buscar():
+        def buscar(lista_videojuegos):
             entrada = etiqueta_buscador.get()
             coincidencias = []
 
             # Comprobamos en cada videojuego si su titulo empieza por la entrada
-            for juego in videojuegos:
+            for juego in lista_videojuegos:
                 if entrada in juego.titulo.lower():
-                    print(juego.titulo)
                     coincidencias.append(juego)
 
             mostrar_juegos(coincidencias, frame_juegos)
 
-        boton_buscador = tk.Button(frame_nav, text="Buscar", command=buscar)
+        boton_buscador = tk.Button(frame_nav, text="Buscar", command=lambda lista=videojuegos: buscar(lista))
         boton_buscador.grid(row=0, column=1)
 
         def borrar_juego(indice):
