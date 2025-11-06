@@ -40,31 +40,34 @@ class App:
         videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
         videojuegos = [videojuego1, videojuego2]
 
-        # Buscador
-        def buscar(entrada):
-            entrada = entrada.lower()
-            resultado = -1 # -1 indica que no se ha encontrado nada
-
-            # Comprobamos en cada videojuego si su titulo empieza por la entrada
-            for juego in videojuegos:
-                if juego.titulo.lower().startswith(entrada):
-                    resultado = juego.fila
-                    break
-
-            return resultado
+        frame_juegos = tk.Frame(self.ventana)
 
         frame_nav = tk.Frame(self.ventana)
         frame_nav.grid(pady=10)
 
         etiqueta_buscador = tk.Entry(frame_nav, width=50)
         etiqueta_buscador.grid(row=0, column=0, padx=10)
-        boton_buscador = tk.Button(frame_nav, text="Buscar")
+
+        # Buscador
+        def buscar():
+            entrada = etiqueta_buscador.get()
+            coincidencias = []
+
+            # Comprobamos en cada videojuego si su titulo empieza por la entrada
+            for juego in videojuegos:
+                if entrada in juego.titulo.lower():
+                    print(juego.titulo)
+                    coincidencias.append(juego)
+
+            mostrar_juegos(coincidencias, frame_juegos)
+
+        boton_buscador = tk.Button(frame_nav, text="Buscar", command=buscar)
         boton_buscador.grid(row=0, column=1)
 
         def borrar_juego(indice):
             videojuegos.pop(indice)
 
-        frame_juegos = tk.Frame(self.ventana)
+        # colocamos el buscador después de la barra de navegación
         frame_juegos.grid(padx=10, pady=10, sticky="w")
 
         def mostrar_juegos(juegos, frame):
