@@ -68,7 +68,12 @@ class App:
 
         # colocamos el buscador después de la barra de navegación
         frame_juegos.grid(padx=10, pady=10, sticky="w")
-
+        
+        def recortar (text):
+            if len(text) >= 30:
+                return text[:30] + "..."
+            return text
+        
         def mostrar_juegos(juegos, frame):
             # limpiamos los elementos al actualizarlos
             for elemento in frame.winfo_children():
@@ -81,7 +86,7 @@ class App:
 
             for indice, v in enumerate(juegos):
                 etiqueta_titulo = tk.Label(frame, text=v.titulo)
-                etiqueta_desc = tk.Label(frame, text=v.descripcion)
+                etiqueta_desc = tk.Label(frame, text=recortar(v.descripcion))
                 etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
                 etiqueta_nota = tk.Label(frame, text=v.nota_media)
                 etiqueta_tipo = tk.Label(frame, text=v.tipo)
