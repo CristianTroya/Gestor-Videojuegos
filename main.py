@@ -50,7 +50,7 @@ class App:
 
         # Buscador
         def buscar(lista_videojuegos):
-            entrada = etiqueta_buscador.get()
+            entrada = etiqueta_buscador.get().lower()
             coincidencias = []
 
             # Comprobamos en cada videojuego si su titulo empieza por la entrada
