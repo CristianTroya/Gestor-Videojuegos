@@ -50,7 +50,7 @@ class App:
 
         # Buscador
         def buscar(lista_videojuegos):
-            entrada = etiqueta_buscador.get()
+            entrada = etiqueta_buscador.get().lower()
             coincidencias = []
 
             # Comprobamos en cada videojuego si su titulo empieza por la entrada
@@ -68,7 +68,12 @@ class App:
 
         # colocamos el buscador después de la barra de navegación
         frame_juegos.grid(padx=10, pady=10, sticky="w")
-
+        
+        def recortar (text):
+            if len(text) >= 30:
+                return text[:30] + "..."
+            return text
+        
         def mostrar_juegos(juegos, frame):
             # limpiamos los elementos al actualizarlos
             for elemento in frame.winfo_children():
