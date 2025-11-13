@@ -86,7 +86,7 @@ class App:
 
             for indice, v in enumerate(juegos):
                 etiqueta_titulo = tk.Label(frame, text=v.titulo, fg='green' if v.completado == 1 else None)
-                etiqueta_desc = tk.Label(frame, text=v.descripcion, fg='green' if v.completado == 1 else None)
+                etiqueta_desc = tk.Label(frame, text=recortar(v.descripcion), fg='green' if v.completado == 1 else None)
                 etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado, fg='green' if v.completado == 1 else None)
                 etiqueta_nota = tk.Label(frame, text=v.nota_media, fg='green' if v.completado == 1 else None)
                 etiqueta_tipo = tk.Label(frame, text=v.tipo, fg='green' if v.completado == 1 else None)
