@@ -36,7 +36,7 @@ class App:
         self.ventana.geometry("900x550")
         self.ventana.title("Gestor de videojuegos")
 
-        videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls")
+        videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls", 1)
         videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
         videojuegos = [videojuego1, videojuego2]
 
@@ -80,11 +80,11 @@ class App:
                 print("Has pulsado borrar!")
 
             for indice, v in enumerate(juegos):
-                etiqueta_titulo = tk.Label(frame, text=v.titulo)
-                etiqueta_desc = tk.Label(frame, text=v.descripcion)
-                etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado)
-                etiqueta_nota = tk.Label(frame, text=v.nota_media)
-                etiqueta_tipo = tk.Label(frame, text=v.tipo)
+                etiqueta_titulo = tk.Label(frame, text=v.titulo, fg='green' if v.completado == 1 else None)
+                etiqueta_desc = tk.Label(frame, text=v.descripcion, fg='green' if v.completado == 1 else None)
+                etiqueta_tiempo_estimado = tk.Label(frame, text=v.tiempo_estimado, fg='green' if v.completado == 1 else None)
+                etiqueta_nota = tk.Label(frame, text=v.nota_media, fg='green' if v.completado == 1 else None)
+                etiqueta_tipo = tk.Label(frame, text=v.tipo, fg='green' if v.completado == 1 else None)
 
                 # usamos lambda para que el índice se acutlice
                 # de ahí que la función al_presionar esté fuera del bucle for
