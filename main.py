@@ -35,8 +35,8 @@ class App:
     def mostrar_error(self):
         # Toplevel crea una nueva ventana "hija" de la ventana principal
         ventana_acerca_de = tk.Toplevel(self.ventana)
-        ventana_acerca_de.title("Acerca del Gestor")
-        ventana_acerca_de.geometry("500x300")
+        ventana_acerca_de.title("ERROR")
+        ventana_acerca_de.geometry("400x250")
 
         # Hacemos que la ventana sea "modal": bloquea la ventana principal
         ventana_acerca_de.grab_set()
