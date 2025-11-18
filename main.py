@@ -31,6 +31,23 @@ class Videojuego:
      return f"[{self.id}] {self.titulo}"
 
 class App:
+
+    def mostrar_error(self):
+        # Toplevel crea una nueva ventana "hija" de la ventana principal
+        ventana_acerca_de = tk.Toplevel(self.ventana)
+        ventana_acerca_de.title("Acerca del Gestor")
+        ventana_acerca_de.geometry("500x300")
+
+        # Hacemos que la ventana sea "modal": bloquea la ventana principal
+        ventana_acerca_de.grab_set()
+        ventana_acerca_de.transient(self.ventana)
+
+        tk.Label(ventana_acerca_de, text="Ha ocurrido un error al añadir el juego").pack(pady=20)
+        tk.Label(ventana_acerca_de, text="Comprueba si has rellenado todas las casillas\n y si el tiempo estimado y la nota media son números").pack(pady=5)
+        
+        boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
+        boton_cerrar.pack(pady=20)
+
     def __init__(self, ventana):
         self.ventana = ventana
         self.ventana.geometry("900x550")
@@ -110,6 +127,7 @@ class App:
         def añadir_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
             for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
                 if str(parametro) == "":
+                    self.mostrar_error()
                     print("Uno o más parámetros están vacíos, no se ha añadido el juego")
                     return
 
@@ -119,6 +137,7 @@ class App:
                 float(nota_media)
 
             except ValueError:
+                self.mostrar_error()
                 print("Alguno de los campos numéricos no lo son:")
                 print("Tiempo estimado: int, completado: int, nota: real")
                 return
