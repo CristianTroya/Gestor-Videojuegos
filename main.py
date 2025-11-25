@@ -18,7 +18,6 @@ class Videojuego:
        - completado: ¿Se ha completado el juego? `1` o `0`
        """
 
-
        self.id = None
        self.titulo = titulo
        self.descripcion = descripcion
@@ -27,15 +26,11 @@ class Videojuego:
        self.tipo = tipo
        self.completado = completado
 
-
    def __str__(self):
     return f"[{self.id}] {self.titulo}"
 
 
 class App:
-   
-
-
    def mostrar_error(self):
        # Toplevel crea una nueva ventana "hija" de la ventana principal
        ventana_acerca_de = tk.Toplevel(self.ventana)
@@ -59,41 +54,24 @@ class App:
        self.cursor = self.conexion.cursor()
        self.crear_tabla()
 
-
        self.ventana = ventana
        self.ventana.geometry("900x550")
        self.ventana.title("Gestor de videojuegos")
 
-
-       videojuego1 = Videojuego("SilkGod", "Descripción Silkgod", "30h", "11/10", "metroidvania souls", 1)
-       videojuego2 = Videojuego("Metroid Prime 4", "Descripción de metroid prime 4", "50h", "10/10", "metroidvania")
-       videojuegos = [videojuego1, videojuego2]
-
-
-       frame_juegos = tk.Frame(self.ventana)
-
-
        frame_nav = tk.Frame(self.ventana)
        frame_nav.grid(pady=10)
 
+       self.etiqueta_buscador = tk.Entry(frame_nav, width=50)
+       self.etiqueta_buscador.grid(row=0, column=0, padx=10)
 
-       etiqueta_buscador = tk.Entry(frame_nav, width=50)
-       etiqueta_buscador.grid(row=0, column=0, padx=10)
+       boton_buscador = tk.Button(frame_nav, text="Buscar")
+       boton_buscador.grid(row=0, column=1)
 
-
-       #boton_buscador = tk.Button(frame_nav, text="Buscar", command=lambda lista=videojuegos: buscar(lista))
-       #boton_buscador.grid(row=0, column=1)
-
-
-       def borrar_juego(indice):
-           videojuegos.pop(indice)
-
+       self.frame_juegos = tk.Frame(self.ventana)
+       self.frame_juegos.grid(padx=10, pady=10, sticky="w")
 
        # colocamos el buscador después de la barra de navegación
-       frame_juegos.grid(padx=10, pady=10, sticky="w")
-      
-       self.mostrar_juegos(frame_juegos)
-
+       self.mostrar_juegos()
 
        def añadir_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
            for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
@@ -102,12 +80,10 @@ class App:
                    print("Uno o más parámetros están vacíos, no se ha añadido el juego")
                    return
 
-
            try:
                int(tiempo_estimado)
                int(completado)
                float(nota_media)
-
 
            except ValueError:
                self.mostrar_error()
@@ -115,19 +91,11 @@ class App:
                print("Tiempo estimado: int, completado: int, nota: real")
                return
 
-
-           juego = Videojuego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
-           videojuegos.append(juego)
-
-
            self.cursor.execute("INSERT INTO Videojuego (Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media) VALUES (?, ?, ?, ?, ?, ?)",
                                (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media))
            self.conexion.commit()
-
-
-           self.mostrar_juegos(frame_juegos)
+           self.mostrar_juegos()
            print("Has pulsado añadir juego!")
-
 
        def ventana_añadir():
            print("Has presionado añadir (se ha creado una ventana)")
@@ -139,13 +107,11 @@ class App:
            frame_añadir = tk.Frame(nueva_ventana)
            frame_añadir.grid(padx=10, pady=10)
 
-
            title = tk.Label(frame_añadir, text="Título del videojuego")
            desc = tk.Label(frame_añadir, text="Descripción del videojuego")
            estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
            rate = tk.Label(frame_añadir, text="Nota media")
            type = tk.Label(frame_añadir, text="Tipo de videojuego")
-
 
            title.grid(row=0, column=0)
            desc.grid (row=0, column=1)
@@ -153,17 +119,14 @@ class App:
            rate.grid(row= 2, column=0)
            type.grid(row=2, column=1)
 
-
            title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
            desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
            estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
            rate_entry = tk.Entry(frame_añadir, text="Nota media")
            type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
 
-
            checkbox_var = tk.BooleanVar()
            completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
-
 
            title_entry.grid(row=1, column=0)
            desc_entry.grid (row=1, column=1)
@@ -171,7 +134,6 @@ class App:
            rate_entry.grid(row=3, column=0)
            type_entry.grid(row=3, column=1)
            completed_entry.grid(row=3, column=2)
-
 
            # convertir True  -> 1
            #           False -> 0
@@ -188,16 +150,13 @@ class App:
                type_entry.get(),
                autenticidad(checkbox_var.get()))
 
-
            añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
            añadir.grid(row=4, column=1)
-
 
        # Añadir juego
        frame_nav.columnconfigure(2, minsize=370)
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
-
 
    def crear_tabla(self):
        self.cursor.execute("""
@@ -220,7 +179,6 @@ class App:
        (id, Nombre, Descripción...)[]
        """
 
-
        # los obtenemos de la base de datos y se devuelven
        self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego ORDER BY Nombre") # ordenamos por nombre
        return self.cursor.fetchall()
@@ -230,32 +188,18 @@ class App:
            return text[:30] + "..."
        return text
 
-
-   def mostrar_juegos(self, frame):
-       """
-       Actualiza la lista de videojuegos en pantalla
-       - juegos: lista de videojuegos que se mostrarán en pantalla
-       - frame: frame en el que se mostrarán
-       """
-
+   def mostrar_juegos(self, juegos=[]):
+       if len(juegos) == 0: 
+           frame = self.frame_juegos
 
        juegos = self.obtener_lista_juegos()
-
 
        # limpiamos los elementos al actualizarlos
        for elemento in frame.winfo_children():
            elemento.destroy()
 
-
-       def al_presionar(indice):
-           self.borrar_juego(indice)
-           self.mostrar_juegos(self.videojuegos, self.frame_juegos)
-           print("Has pulsado borrar!")
-
-
        for indice, v in enumerate(juegos):
            id, titulo, desc, tiempo_estimado, tipo, completado, nota_media = v
-
 
            etiqueta_titulo = tk.Label(frame, text=titulo, fg='green' if completado == 1 else None)
            etiqueta_desc = tk.Label(frame, text=self.recortar(desc), fg='green' if completado == 1 else None)
@@ -263,11 +207,9 @@ class App:
            etiqueta_nota = tk.Label(frame, text=nota_media, fg='green' if completado == 1 else None)
            etiqueta_tipo = tk.Label(frame, text=tipo, fg='green' if completado == 1 else None)
 
-
            # usamos lambda para que el índice se acutlice
            # de ahí que la función al_presionar esté fuera del bucle for
-           etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=indice: al_presionar(id))
-
+           etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=id: self.borrar_juego(i))
 
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
            etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
@@ -276,29 +218,26 @@ class App:
            etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=10)
            etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
 
+   def borrar_juego(self, id):
+        print("Has pulsado borrar!")
 
+        if messagebox.askyesno("Confirmar borrado", "¿Estás seguro?"):
+            self.cursor.execute("DELETE FROM Videojuego WHERE id = ?", (id,))
+            self.conexion.commit()
+            
+            self.mostrar_juegos()
 
+   def buscar(self):
+        # la entrada del buscador
+        entrada = self.etiqueta_buscador.get().lower()
+        lista_juegos = self.obtener_lista_juegos()
+        coincidencias = []
 
-   def borrar_juego(self, indice):
-       # work on progress
-       if messagebox.askyesno("Confirmar borrado", "Estás seguro bro?"):
-           self.cursor.execute("DELETE FROM Videojuego WHERE id = ?", ())
-
-
-   def buscar(self, lista_videojuegos):
-       # la entrada del buscador
-       entrada = self.etiqueta_buscador.get().lower()
-       coincidencias = []
-
-
-       # Comprobamos en cada videojuego si su titulo empieza por la entrada
-       for juego in lista_videojuegos:
-           if entrada in juego.titulo.lower():
-               coincidencias.append(juego)
-
-
-           self.mostrar_juegos(self.frame_juegos, coincidencias)
-
+        # Comprobamos en cada videojuego si su titulo empieza por la entrada
+        for juego in lista_juegos:
+            if entrada in juego.titulo.lower():
+                coincidencias.append(juego)
+            self.mostrar_juegos(coincidencias)
 
 if __name__ == "__main__":
    ventana_principal = tk.Tk()
