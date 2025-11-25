@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-import sqlite3
-
+from database_manager import DatabaseManager
 
 class Videojuego:
    """
@@ -29,7 +28,6 @@ class Videojuego:
    def __str__(self):
     return f"[{self.id}] {self.titulo}"
 
-
 class App:
    def mostrar_error(self):
        # Toplevel crea una nueva ventana "hija" de la ventana principal
@@ -50,13 +48,11 @@ class App:
        boton_cerrar.pack(pady=20)
 
    def __init__(self, ventana):
-       self.conexion = sqlite3.connect("tareas.db")
-       self.cursor = self.conexion.cursor()
-       self.crear_tabla()
-
        self.ventana = ventana
        self.ventana.geometry("900x550")
        self.ventana.title("Gestor de videojuegos")
+
+       self.db = DatabaseManager("videojuegos.db")
 
        frame_nav = tk.Frame(self.ventana)
        frame_nav.grid(pady=10)
@@ -91,9 +87,7 @@ class App:
                print("Tiempo estimado: int, completado: int, nota: real")
                return
 
-           self.cursor.execute("INSERT INTO Videojuego (Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media) VALUES (?, ?, ?, ?, ?, ?)",
-                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media))
-           self.conexion.commit()
+           
            self.mostrar_juegos()
            print("Has pulsado añadir juego!")
 
@@ -158,31 +152,6 @@ class App:
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
 
-   def crear_tabla(self):
-       self.cursor.execute("""
-           CREATE TABLE IF NOT EXISTS Videojuego (
-               id INTEGER PRIMARY KEY,
-               Nombre TEXT NOT NULL,
-               Descripción TEXT NOT NULL,
-               Tiempo_estimado INTEGER NOT NULL,
-               Tipo TEXT NOT NULL,
-               Completado INTEGER NOT NULL,
-               Nota_media REAL NOT NULL
-           )
-       """)
-       self.conexion.commit()
-
-
-   def obtener_lista_juegos(self):
-       """
-       Devuelve la lista de videojuegos en tuplas.\n
-       (id, Nombre, Descripción...)[]
-       """
-
-       # los obtenemos de la base de datos y se devuelven
-       self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego ORDER BY Nombre") # ordenamos por nombre
-       return self.cursor.fetchall()
-  
    def recortar(self, text):
        if len(text) >= 30:
            return text[:30] + "..."
@@ -222,9 +191,7 @@ class App:
         print("Has pulsado borrar!")
 
         if messagebox.askyesno("Confirmar borrado", "¿Estás seguro?"):
-            self.cursor.execute("DELETE FROM Videojuego WHERE id = ?", (id,))
-            self.conexion.commit()
-            
+ 
             self.mostrar_juegos()
 
    def buscar(self):
@@ -243,4 +210,3 @@ if __name__ == "__main__":
    ventana_principal = tk.Tk()
    app = App(ventana_principal)
    ventana_principal.mainloop()
-
