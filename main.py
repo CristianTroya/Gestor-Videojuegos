@@ -29,24 +29,6 @@ class Videojuego:
     return f"[{self.id}] {self.titulo}"
 
 class App:
-   def mostrar_error(self):
-       # Toplevel crea una nueva ventana "hija" de la ventana principal
-       ventana_acerca_de = tk.Toplevel(self.ventana)
-       ventana_acerca_de.title("ERROR")
-       ventana_acerca_de.geometry("400x250")
-
-
-       # Hacemos que la ventana sea "modal": bloquea la ventana principal
-       ventana_acerca_de.grab_set()
-       ventana_acerca_de.transient(self.ventana)
-
-
-       tk.Label(ventana_acerca_de, text="Ha ocurrido un error al añadir el juego").pack(pady=20)
-       tk.Label(ventana_acerca_de, text="Comprueba si has rellenado todas las casillas\n y si el tiempo estimado y la nota media son números").pack(pady=5)
-      
-       boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
-       boton_cerrar.pack(pady=20)
-
    def __init__(self, ventana):
        self.ventana = ventana
        self.ventana.geometry("900x550")
@@ -60,7 +42,7 @@ class App:
        self.etiqueta_buscador = tk.Entry(frame_nav, width=50)
        self.etiqueta_buscador.grid(row=0, column=0, padx=10)
 
-       boton_buscador = tk.Button(frame_nav, text="Buscar")
+       boton_buscador = tk.Button(frame_nav, text="Buscar", command=self.buscar)
        boton_buscador.grid(row=0, column=1)
 
        self.frame_juegos = tk.Frame(self.ventana)
@@ -73,7 +55,22 @@ class App:
        frame_nav.columnconfigure(2, minsize=370)
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=self.ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
-    
+
+   def mostrar_error(self):
+       # Toplevel crea una nueva ventana "hija" de la ventana principal
+       ventana_acerca_de = tk.Toplevel(self.ventana)
+       ventana_acerca_de.title("ERROR")
+       ventana_acerca_de.geometry("400x250")
+
+       # Hacemos que la ventana sea "modal": bloquea la ventana principal
+       ventana_acerca_de.grab_set()
+       ventana_acerca_de.transient(self.ventana)
+
+       tk.Label(ventana_acerca_de, text="Ha ocurrido un error al añadir el juego").pack(pady=20)
+       tk.Label(ventana_acerca_de, text="Comprueba si has rellenado todas las casillas\n y si el tiempo estimado y la nota media son números").pack(pady=5)
+      
+       boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
+       boton_cerrar.pack(pady=20)
 
    def ventana_añadir(self):
         print("Has presionado añadir (se ha creado una ventana)")
@@ -119,6 +116,7 @@ class App:
             if bool==True: return 1
             return 0
         
+        # obtenemos todos los campos
         def al_presionar():
             self.añadir_juego(
             title_entry.get(),
@@ -137,12 +135,13 @@ class App:
                 self.mostrar_error()
                 print("Uno o más parámetros están vacíos, no se ha añadido el juego")
                 return
-
+        # si intentamos convertir un texto a número nos devolverá un error
         try:
             int(tiempo_estimado)
             int(completado)
             float(nota_media)
 
+        # si hay error entonces hay texto en un campo de número
         except ValueError:
             self.mostrar_error()
             print("Alguno de los campos numéricos no lo son:")
@@ -159,15 +158,23 @@ class App:
        return text
 
    def mostrar_juegos(self, juegos=[]):
-       if len(juegos) == 0: 
-           frame = self.frame_juegos
-
-       juegos = self.db.obtener_lista_juegos()
+       # siempre usamos el mismo frame declarado en __init__
+       frame = self.frame_juegos
 
        # limpiamos los elementos al actualizarlos
        for elemento in frame.winfo_children():
            elemento.destroy()
 
+       # Si juegos != [], entonces sí se usó el buscador
+
+       # el buscador no devolvió coincidencias
+       if juegos == None:
+           return
+       
+       # no se usó el buscador, por tanto mostramos todos los juegos
+       if len(juegos) == 0:
+        juegos = self.db.obtener_lista_juegos()
+       
        for indice, v in enumerate(juegos):
            id, titulo, desc, tiempo_estimado, tipo, completado, nota_media = v
 
@@ -198,14 +205,22 @@ class App:
    def buscar(self):
         # la entrada del buscador
         entrada = self.etiqueta_buscador.get().lower()
-        lista_juegos = self.obtener_lista_juegos()
+        lista_juegos = self.db.obtener_lista_juegos()
         coincidencias = []
 
         # Comprobamos en cada videojuego si su titulo empieza por la entrada
         for juego in lista_juegos:
-            if entrada in juego.titulo.lower():
+            titulo = juego[1].lower() # titulo
+
+            if entrada in titulo:
                 coincidencias.append(juego)
+
+        if len(coincidencias) > 0:
             self.mostrar_juegos(coincidencias)
+            return
+        
+        # Le pasamos None para no mostrar juegos
+        self.mostrar_juegos(None)
 
 if __name__ == "__main__":
    ventana_principal = tk.Tk()
