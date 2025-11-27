@@ -69,88 +69,89 @@ class App:
        # colocamos el buscador después de la barra de navegación
        self.mostrar_juegos()
 
-       def añadir_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
-           for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
-               if str(parametro) == "":
-                   self.mostrar_error()
-                   print("Uno o más parámetros están vacíos, no se ha añadido el juego")
-                   return
-
-           try:
-               int(tiempo_estimado)
-               int(completado)
-               float(nota_media)
-
-           except ValueError:
-               self.mostrar_error()
-               print("Alguno de los campos numéricos no lo son:")
-               print("Tiempo estimado: int, completado: int, nota: real")
-               return
-
-           
-           self.mostrar_juegos()
-           print("Has pulsado añadir juego!")
-
-       def ventana_añadir():
-           print("Has presionado añadir (se ha creado una ventana)")
-          
-           nueva_ventana = tk.Toplevel(self.ventana)
-           nueva_ventana.title("Añadir videojuego")
-           nueva_ventana.geometry("700x300")
-      
-           frame_añadir = tk.Frame(nueva_ventana)
-           frame_añadir.grid(padx=10, pady=10)
-
-           title = tk.Label(frame_añadir, text="Título del videojuego")
-           desc = tk.Label(frame_añadir, text="Descripción del videojuego")
-           estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
-           rate = tk.Label(frame_añadir, text="Nota media")
-           type = tk.Label(frame_añadir, text="Tipo de videojuego")
-
-           title.grid(row=0, column=0)
-           desc.grid (row=0, column=1)
-           estimated_time.grid(row=0, column=2)
-           rate.grid(row= 2, column=0)
-           type.grid(row=2, column=1)
-
-           title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
-           desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
-           estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
-           rate_entry = tk.Entry(frame_añadir, text="Nota media")
-           type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
-
-           checkbox_var = tk.BooleanVar()
-           completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
-
-           title_entry.grid(row=1, column=0)
-           desc_entry.grid (row=1, column=1)
-           estimated_entry.grid(row=1, column=2)
-           rate_entry.grid(row=3, column=0)
-           type_entry.grid(row=3, column=1)
-           completed_entry.grid(row=3, column=2)
-
-           # convertir True  -> 1
-           #           False -> 0
-           def autenticidad(bool):
-               if bool==True: return 1
-               return 0
-          
-           def al_presionar():
-               añadir_juego(
-               title_entry.get(),
-               desc_entry.get(),
-               estimated_entry.get(),
-               rate_entry.get(),
-               type_entry.get(),
-               autenticidad(checkbox_var.get()))
-
-           añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
-           añadir.grid(row=4, column=1)
-
        # Añadir juego
        frame_nav.columnconfigure(2, minsize=370)
-       boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=ventana_añadir)
+       boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=self.ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
+    
+
+   def ventana_añadir(self):
+        print("Has presionado añadir (se ha creado una ventana)")
+        
+        nueva_ventana = tk.Toplevel(self.ventana)
+        nueva_ventana.title("Añadir videojuego")
+        nueva_ventana.geometry("700x300")
+    
+        frame_añadir = tk.Frame(nueva_ventana)
+        frame_añadir.grid(padx=10, pady=10)
+
+        title = tk.Label(frame_añadir, text="Título del videojuego")
+        desc = tk.Label(frame_añadir, text="Descripción del videojuego")
+        estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
+        rate = tk.Label(frame_añadir, text="Nota media")
+        type = tk.Label(frame_añadir, text="Tipo de videojuego")
+
+        title.grid(row=0, column=0)
+        desc.grid (row=0, column=1)
+        estimated_time.grid(row=0, column=2)
+        rate.grid(row= 2, column=0)
+        type.grid(row=2, column=1)
+
+        title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
+        desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
+        estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
+        rate_entry = tk.Entry(frame_añadir, text="Nota media")
+        type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
+
+        checkbox_var = tk.BooleanVar()
+        completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
+
+        title_entry.grid(row=1, column=0)
+        desc_entry.grid (row=1, column=1)
+        estimated_entry.grid(row=1, column=2)
+        rate_entry.grid(row=3, column=0)
+        type_entry.grid(row=3, column=1)
+        completed_entry.grid(row=3, column=2)
+
+        # convertir True  -> 1
+        #           False -> 0
+        def autenticidad(bool):
+            if bool==True: return 1
+            return 0
+        
+        def al_presionar():
+            self.añadir_juego(
+            title_entry.get(),
+            desc_entry.get(),
+            estimated_entry.get(),
+            rate_entry.get(),
+            type_entry.get(),
+            autenticidad(checkbox_var.get()))
+
+        añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
+        añadir.grid(row=4, column=1)
+
+   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+        for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
+            if str(parametro) == "":
+                self.mostrar_error()
+                print("Uno o más parámetros están vacíos, no se ha añadido el juego")
+                return
+
+        try:
+            int(tiempo_estimado)
+            int(completado)
+            float(nota_media)
+
+        except ValueError:
+            self.mostrar_error()
+            print("Alguno de los campos numéricos no lo son:")
+            print("Tiempo estimado: int, completado: int, nota: real")
+            return
+
+        self.db.añadir_juego(titulo, descripcion, tiempo_estimado, tipo, completado, nota_media)
+        self.mostrar_juegos()
+        print("Has pulsado añadir juego!")
 
    def recortar(self, text):
        if len(text) >= 30:
@@ -161,7 +162,7 @@ class App:
        if len(juegos) == 0: 
            frame = self.frame_juegos
 
-       juegos = self.obtener_lista_juegos()
+       juegos = self.db.obtener_lista_juegos()
 
        # limpiamos los elementos al actualizarlos
        for elemento in frame.winfo_children():
@@ -191,7 +192,7 @@ class App:
         print("Has pulsado borrar!")
 
         if messagebox.askyesno("Confirmar borrado", "¿Estás seguro?"):
- 
+            self.db.borrar_juego(id)
             self.mostrar_juegos()
 
    def buscar(self):
