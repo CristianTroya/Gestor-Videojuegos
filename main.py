@@ -34,6 +34,20 @@ class App:
        self.ventana.geometry("900x550")
        self.ventana.title("Gestor de videojuegos")
 
+       self.barra_menu = tk.Menu(self.ventana)
+       self.ventana.config(menu=self.barra_menu)
+
+        # Creamos el menú desplegable "Archivo"
+       menu_archivo = tk.Menu(self.barra_menu, tearoff=0)
+       self.barra_menu.add_cascade(label="Archivo", menu=menu_archivo)
+       menu_archivo.add_separator()
+       menu_archivo.add_command(label="Salir", command=self.ventana.destroy)
+
+       # Creamos el menú desplegable "Ayuda"
+       menu_ayuda = tk.Menu(self.barra_menu, tearoff=0)
+       self.barra_menu.add_cascade(label="Ayuda", menu=menu_ayuda)
+       menu_ayuda.add_command(label="Acerca de...", command=self.mostrar_error)
+       
        self.db = DatabaseManager("videojuegos.db")
 
        frame_nav = tk.Frame(self.ventana)
