@@ -29,6 +29,7 @@ class Videojuego:
     return f"[{self.id}] {self.titulo}"
 
 class App:
+
    def __init__(self, ventana):
        self.ventana = ventana
        self.ventana.geometry("900x550")
@@ -46,7 +47,7 @@ class App:
        # Creamos el menú desplegable "Ayuda"
        menu_ayuda = tk.Menu(self.barra_menu, tearoff=0)
        self.barra_menu.add_cascade(label="Ayuda", menu=menu_ayuda)
-       menu_ayuda.add_command(label="Acerca de...", command=self.mostrar_error)
+       menu_ayuda.add_command(label="Acerca de...", command=self.mostrar_acerca_de)
        
        self.db = DatabaseManager("videojuegos.db")
 
@@ -69,6 +70,22 @@ class App:
        frame_nav.columnconfigure(2, minsize=370)
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=self.ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
+   
+   def mostrar_acerca_de(self):
+        # Toplevel crea una nueva ventana "hija" de la ventana principal
+        ventana_acerca_de = tk.Toplevel(self.ventana)
+        ventana_acerca_de.title("Acerca de nosotros")
+        ventana_acerca_de.geometry("425x200")
+
+        # Hacemos que la ventana sea "modal": bloquea la ventana principal
+        ventana_acerca_de.grab_set()
+        ventana_acerca_de.transient(self.ventana)
+
+        tk.Label(ventana_acerca_de, text="Gestor de videojuegos").pack(pady=20)
+        tk.Label(ventana_acerca_de, text="Desarrolado por: Carlos Rincón, Elio Delgado y Cristian Troya").pack(pady=5)
+        
+        boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
+        boton_cerrar.pack(pady=20)
 
    def mostrar_error(self):
        # Toplevel crea una nueva ventana "hija" de la ventana principal
