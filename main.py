@@ -66,7 +66,7 @@ class App:
        # colocamos el buscador después de la barra de navegación
        self.mostrar_juegos()
 
-       # Añadir juego
+       # Botón para añadir el juego en la pantalla principal
        frame_nav.columnconfigure(2, minsize=370)
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=self.ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
@@ -106,6 +106,7 @@ class App:
    def ventana_añadir(self):
         print("Has presionado añadir (se ha creado una ventana)")
         
+        # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
         nueva_ventana.title("Añadir videojuego")
         nueva_ventana.geometry("700x300")
@@ -113,27 +114,32 @@ class App:
         frame_añadir = tk.Frame(nueva_ventana)
         frame_añadir.grid(padx=10, pady=10)
 
+        # Etiquetas
         title = tk.Label(frame_añadir, text="Título del videojuego")
         desc = tk.Label(frame_añadir, text="Descripción del videojuego")
         estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
         rate = tk.Label(frame_añadir, text="Nota media")
         type = tk.Label(frame_añadir, text="Tipo de videojuego")
 
+        # Posicionamos las etiquetas
         title.grid(row=0, column=0)
         desc.grid (row=0, column=1)
         estimated_time.grid(row=0, column=2)
         rate.grid(row= 2, column=0)
         type.grid(row=2, column=1)
 
+        # Campos rellenables
         title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
         desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
         estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
         rate_entry = tk.Entry(frame_añadir, text="Nota media")
         type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
 
+        # Casilla marcable
         checkbox_var = tk.BooleanVar()
         completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
 
+        # Posicionamos los campos rellenables y la casilla
         title_entry.grid(row=1, column=0)
         desc_entry.grid (row=1, column=1)
         estimated_entry.grid(row=1, column=2)
@@ -141,6 +147,7 @@ class App:
         type_entry.grid(row=3, column=1)
         completed_entry.grid(row=3, column=2)
 
+        # La usaremos para convertir el True/False de la casilla marcable
         # convertir True  -> 1
         #           False -> 0
         def autenticidad(bool):
@@ -155,15 +162,17 @@ class App:
             estimated_entry.get(),
             rate_entry.get(),
             type_entry.get(),
-            autenticidad(checkbox_var.get()))
+            autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
 
+        # Botón para añadir el juego en la pantalla emergente
         añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
         añadir.grid(row=4, column=1)
 
    def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+        # Comprobamos que los campos no estén vacíos
         for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
             if str(parametro) == "":
-                self.mostrar_error()
+                self.mostrar_error() # Mostramos error si está vacío
                 print("Uno o más parámetros están vacíos, no se ha añadido el juego")
                 return
         # si intentamos convertir un texto a número nos devolverá un error
@@ -183,6 +192,7 @@ class App:
         self.mostrar_juegos()
         print("Has pulsado añadir juego!")
 
+    # Recorta el texto, lo usamos para la descripción
    def recortar(self, text):
        if len(text) >= 30:
            return text[:30] + "..."
@@ -207,8 +217,10 @@ class App:
         juegos = self.db.obtener_lista_juegos()
        
        for indice, v in enumerate(juegos):
+           # Obtenemos los datos de la tupla
            id, titulo, desc, tiempo_estimado, tipo, completado, nota_media = v
 
+           # Etiquetas
            etiqueta_titulo = tk.Label(frame, text=titulo, fg='green' if completado == 1 else None)
            etiqueta_desc = tk.Label(frame, text=self.recortar(desc), fg='green' if completado == 1 else None)
            etiqueta_tiempo_estimado = tk.Label(frame, text=tiempo_estimado, fg='green' if completado == 1 else None)
@@ -218,7 +230,8 @@ class App:
            # usamos lambda para que el índice se acutlice
            # de ahí que la función al_presionar esté fuera del bucle for
            etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=id: self.borrar_juego(i))
-
+           
+           # Posicionamos las etiquetas
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
            etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
            etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=10)
