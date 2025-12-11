@@ -48,6 +48,7 @@ class App:
        menu_ayuda = tk.Menu(self.barra_menu, tearoff=0)
        self.barra_menu.add_cascade(label="Ayuda", menu=menu_ayuda)
        menu_ayuda.add_command(label="Acerca de...", command=self.mostrar_acerca_de)
+       menu_ayuda.add_command(label="¿Cómo usar?", command=self.mostrar_ayuda)
        
        self.db = DatabaseManager("videojuegos.db")
 
@@ -83,9 +84,26 @@ class App:
 
         tk.Label(ventana_acerca_de, text="Gestor de videojuegos").pack(pady=20)
         tk.Label(ventana_acerca_de, text="Desarrolado por: Carlos Rincón, Elio Delgado y Cristian Troya").pack(pady=5)
-        
+                
         boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
         boton_cerrar.pack(pady=20)
+
+   def mostrar_ayuda(self):
+        # Toplevel crea una nueva ventana "hija" de la ventana principal
+        ventana_ayuda = tk.Toplevel(self.ventana)
+        ventana_ayuda.title("¿Cómo usar?")
+        ventana_ayuda.geometry("425x200")
+
+        # Hacemos que la ventana sea "modal": bloquea la ventana principal
+        ventana_ayuda.grab_set()
+        ventana_ayuda.transient(self.ventana)
+
+        tk.Label(ventana_ayuda, text="¿Cómo usar?").pack(pady=20)
+        tk.Label(ventana_ayuda, text="El botón añadir juego abre una ventana en la cual\ndebes añadir los datos del videojuego\n\n Al completar la ventana pulsar el botón añadir\npara añadir el videojuego a la tabla\n\n Una vez en la tabla puedes consultar los juegos con\nel buscador o eliminarlos de la tabla con la cruz").pack(pady=0)
+        
+        boton_cerrar = tk.Button(ventana_ayuda, text="Cerrar", command=ventana_ayuda.destroy)
+        boton_cerrar.pack(pady=20)
+
 
    def mostrar_error(self):
        # Toplevel crea una nueva ventana "hija" de la ventana principal
