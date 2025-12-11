@@ -234,6 +234,7 @@ class App:
        if len(juegos) == 0:
         juegos = self.db.obtener_lista_juegos()
        
+       juegos.insert(0, ("id", "Titulo", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media"))
        for indice, v in enumerate(juegos):
            # Obtenemos los datos de la tupla
            id, titulo, desc, tiempo_estimado, tipo, completado, nota_media = v
@@ -251,11 +252,13 @@ class App:
            
            # Posicionamos las etiquetas
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
-           etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=10)
-           etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=10)
-           etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=10)
-           etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=10)
-           etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
+           etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=50)
+           etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=50)
+           etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=50)
+           etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=50)
+
+           if indice != 0:
+            etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
 
    def borrar_juego(self, id):
         print("Has pulsado borrar!")
