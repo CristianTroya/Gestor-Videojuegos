@@ -42,7 +42,7 @@ class App:
        menu_archivo = tk.Menu(self.barra_menu, tearoff=0)
        self.barra_menu.add_cascade(label="Archivo", menu=menu_archivo)
        menu_archivo.add_separator()
-       menu_archivo.add_command(label="Salir", command=self.ventana.destroy)
+       menu_archivo.add_command(label="Guardar y salir", command=self.ventana.destroy)
 
        # Creamos el menú desplegable "Ayuda"
        menu_ayuda = tk.Menu(self.barra_menu, tearoff=0)
