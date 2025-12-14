@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 from tkinter import messagebox
 from database_manager import DatabaseManager
 
@@ -49,7 +50,14 @@ class App:
        self.barra_menu.add_cascade(label="Ayuda", menu=menu_ayuda)
        menu_ayuda.add_command(label="Acerca de...", command=self.mostrar_acerca_de)
        menu_ayuda.add_command(label="¿Cómo usar?", command=self.mostrar_ayuda)
-       
+
+       # convertir a json
+       menu_archivo.add_command(label="Exportar a JSON", command=self.exportar_json)
+       menu_archivo.add_command(label="Importar desde JSON", command=self.importar_json)
+       menu_archivo.add_separator() # Una línea separadora
+       menu_archivo.add_command(label="Salir", command=self.ventana.destroy)
+
+
        self.db = DatabaseManager("videojuegos.db")
 
        frame_nav = tk.Frame(self.ventana)
@@ -71,7 +79,7 @@ class App:
        frame_nav.columnconfigure(2, minsize=370)
        boton_añadir = tk.Button(frame_nav, text="Añadir juego", command=self.ventana_añadir)
        boton_añadir.grid(row=0, column=2, sticky="e")
-   
+
    def mostrar_acerca_de(self):
         # Toplevel crea una nueva ventana "hija" de la ventana principal
         ventana_acerca_de = tk.Toplevel(self.ventana)
@@ -84,7 +92,7 @@ class App:
 
         tk.Label(ventana_acerca_de, text="Gestor de videojuegos").pack(pady=20)
         tk.Label(ventana_acerca_de, text="Desarrolado por: Carlos Rincón, Elio Delgado y Cristian Troya").pack(pady=5)
-                
+
         boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
         boton_cerrar.pack(pady=20)
 
@@ -100,7 +108,7 @@ class App:
 
         tk.Label(ventana_ayuda, text="¿Cómo usar?").pack(pady=20)
         tk.Label(ventana_ayuda, text="El botón añadir juego abre una ventana en la cual\ndebes añadir los datos del videojuego\n\n Al completar la ventana pulsar el botón añadir\npara añadir el videojuego a la tabla\n\n Una vez en la tabla puedes consultar los juegos con\nel buscador o eliminarlos de la tabla con la cruz").pack(pady=0)
-        
+
         boton_cerrar = tk.Button(ventana_ayuda, text="Cerrar", command=ventana_ayuda.destroy)
         boton_cerrar.pack(pady=20)
 
@@ -117,18 +125,18 @@ class App:
 
        tk.Label(ventana_acerca_de, text="Ha ocurrido un error al añadir el juego").pack(pady=20)
        tk.Label(ventana_acerca_de, text="Comprueba si has rellenado todas las casillas\n y si el tiempo estimado y la nota media son números").pack(pady=5)
-      
+
        boton_cerrar = tk.Button(ventana_acerca_de, text="Cerrar", command=ventana_acerca_de.destroy)
        boton_cerrar.pack(pady=20)
 
    def ventana_añadir(self):
         print("Has presionado añadir (se ha creado una ventana)")
-        
+
         # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
         nueva_ventana.title("Añadir videojuego")
         nueva_ventana.geometry("700x300")
-    
+
         frame_añadir = tk.Frame(nueva_ventana)
         frame_añadir.grid(padx=10, pady=10)
 
@@ -171,7 +179,7 @@ class App:
         def autenticidad(bool):
             if bool==True: return 1
             return 0
-        
+
         # obtenemos todos los campos
         def al_presionar():
             self.añadir_juego(
@@ -229,11 +237,11 @@ class App:
        # el buscador no devolvió coincidencias
        if juegos == None:
            return
-       
+
        # no se usó el buscador, por tanto mostramos todos los juegos
        if len(juegos) == 0:
         juegos = self.db.obtener_lista_juegos()
-       
+
        juegos.insert(0, ("id", "Titulo", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media"))
        for indice, v in enumerate(juegos):
            # Obtenemos los datos de la tupla
@@ -249,7 +257,7 @@ class App:
            # usamos lambda para que el índice se acutlice
            # de ahí que la función al_presionar esté fuera del bucle for
            etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=id: self.borrar_juego(i))
-           
+
            # Posicionamos las etiquetas
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
            etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=50)
@@ -283,9 +291,63 @@ class App:
         if len(coincidencias) > 0:
             self.mostrar_juegos(coincidencias)
             return
-        
+
         # Le pasamos None para no mostrar juegos
         self.mostrar_juegos(None)
+
+   def exportar_json(self):
+        # 1. Pedimos todos los datos al gestor de la BD
+        tareas = self.db.obtener_lista_juegos()
+
+        lista_de_diccionarios = []
+        for tarea in tareas:
+            # Convertimos cada tupla en un diccionario
+            juego = {
+                'id': tarea[0],
+                'titulo': tarea[1],
+                'descripcion': tarea[2],
+                'tiempo_estimado': tarea[3],
+                'tipo': tarea[4],
+                'completado': tarea[5],
+                'nota_media': tarea[6]
+            }
+            lista_de_diccionarios.append(juego)
+
+        # 2. Escribimos la lista de diccionarios en un archivo .json
+        try:
+            with open('backup_videojuegos.json', 'w', encoding='utf-8') as f:
+                json.dump(lista_de_diccionarios, f, indent=4, ensure_ascii=False)
+            messagebox.showinfo("Exportación Exitosa", "Datos exportados a backup_videojuegos.json")
+        except Exception as e: # Capturamos cualquier error que pueda ocurrir
+            messagebox.showerror("Error de Exportación", f"No se pudo exportar: {e}")
+
+
+   def importar_json(self):
+        try:
+            with open('backup_videojuegos.json', 'r', encoding='utf-8') as f:
+                # json.load lee el archivo 'f' y lo convierte a una lista de Python
+                lista_de_juegos = json.load(f)
+
+            for tarea in lista_de_juegos:
+                # Insertamos cada tarea en la BD usando las claves del diccionario
+                self.db.añadir_juego(
+                    tarea['titulo'],
+                    tarea['descripcion'],
+                    tarea['tiempo_estimado'],
+                    tarea['tipo'],
+                    tarea['completado'],
+                    tarea['nota_media'],
+                )
+                # (Nota: esto no importa el estado 'completada' o el 'id', se podría mejorar)
+
+            self.mostrar_juegos()
+            messagebox.showinfo("Importación Exitosa", "Datos importados desde backup_videojuegos.json")
+
+        except FileNotFoundError:
+            messagebox.showerror("Error", "No se encontró el archivo 'backup_videojuegos.json'")
+        except Exception as e:
+
+            messagebox.showerror("Error de Importación", f"No se pudo importar: {e}")
 
 if __name__ == "__main__":
    ventana_principal = tk.Tk()
