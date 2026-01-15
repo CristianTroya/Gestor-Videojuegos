@@ -33,7 +33,7 @@ class App:
 
    def __init__(self, ventana):
        self.ventana = ventana
-       self.ventana.geometry("900x550")
+       self.ventana.geometry("920x550")
        self.ventana.title("Gestor de videojuegos")
 
        self.barra_menu = tk.Menu(self.ventana)
@@ -194,7 +194,83 @@ class App:
         añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
         añadir.grid(row=4, column=1)
 
-   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+   def ventana_modificar(self, id):
+        print("Has presionado modificar (se ha creado una ventana)")
+
+        _, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media = self.db.obtener_juego(id)
+
+        # La nueva ventana, encima de la principal
+        nueva_ventana = tk.Toplevel(self.ventana)
+        nueva_ventana.title("Modificar videojuego")
+        nueva_ventana.geometry("700x300")
+
+        frame_añadir = tk.Frame(nueva_ventana)
+        frame_añadir.grid(padx=10, pady=10)
+
+        # Etiquetas
+        title = tk.Label(frame_añadir, text="Título del videojuego")
+        desc = tk.Label(frame_añadir, text="Descripción del videojuego")
+        estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
+        rate = tk.Label(frame_añadir, text="Nota media")
+        type = tk.Label(frame_añadir, text="Tipo de videojuego")
+
+        # Posicionamos las etiquetas
+        title.grid(row=0, column=0)
+        desc.grid (row=0, column=1)
+        estimated_time.grid(row=0, column=2)
+        rate.grid(row= 2, column=0)
+        type.grid(row=2, column=1)
+
+        # Campos rellenables
+        title_entry = tk.Entry(frame_añadir)
+        desc_entry = tk.Entry(frame_añadir)
+        estimated_entry= tk.Entry(frame_añadir)
+        rate_entry = tk.Entry(frame_añadir)
+        type_entry = tk.Entry(frame_añadir)
+
+        # Rellenamos con los datos ya existentes
+        title_entry.insert(-1, titulo)
+        desc_entry.insert(-1, descripcion)
+        estimated_entry.insert(-1, tiempo_estimado)
+        rate_entry.insert(-1, nota_media)
+        type_entry.insert(-1, tipo)
+
+        # Casilla marcable
+        checkbox_var = tk.BooleanVar()
+        completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
+        if completado: completed_entry.select()
+
+        # Posicionamos los campos rellenables y la casilla
+        title_entry.grid(row=1, column=0)
+        desc_entry.grid (row=1, column=1)
+        estimated_entry.grid(row=1, column=2)
+        rate_entry.grid(row=3, column=0)
+        type_entry.grid(row=3, column=1)
+        completed_entry.grid(row=3, column=2)
+
+        # La usaremos para convertir el True/False de la casilla marcable
+        # convertir True  -> 1
+        #           False -> 0
+        def autenticidad(bool):
+            if bool==True: return 1
+            return 0
+
+        # obtenemos todos los campos
+        def al_presionar():
+            self.modificar_juego(
+            id,
+            title_entry.get(),
+            desc_entry.get(),
+            estimated_entry.get(),
+            rate_entry.get(),
+            type_entry.get(),
+            autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
+
+        # Botón para añadir el juego en la pantalla emergente
+        añadir = tk.Button(nueva_ventana, text="Modificar", command=al_presionar)
+        añadir.grid(row=4, column=1)
+
+   def comprobar_campos_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
         # Comprobamos que los campos no estén vacíos
         for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
             if str(parametro) == "":
@@ -213,6 +289,16 @@ class App:
             print("Alguno de los campos numéricos no lo son:")
             print("Tiempo estimado: int, completado: int, nota: real")
             return
+        
+   def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
+
+        self.db.modificar_juego(id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media)
+        self.mostrar_juegos()
+        print("Has pulsado modificar juego!")
+
+   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
 
         self.db.añadir_juego(titulo, descripcion, tiempo_estimado, tipo, completado, nota_media)
         self.mostrar_juegos()
@@ -257,6 +343,7 @@ class App:
            # usamos lambda para que el índice se acutlice
            # de ahí que la función al_presionar esté fuera del bucle for
            etiqueta_borrar = tk.Button(frame, text="x", command=lambda i=id: self.borrar_juego(i))
+           etiqueta_editar = tk.Button(frame, text="🖉", command=lambda i=id: self.ventana_modificar(i))
 
            # Posicionamos las etiquetas
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
@@ -266,6 +353,7 @@ class App:
            etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=50)
 
            if indice != 0:
+            etiqueta_editar.grid(row=indice, column=6, sticky="w", padx=50)
             etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
 
    def borrar_juego(self, id):

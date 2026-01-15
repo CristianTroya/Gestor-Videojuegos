@@ -26,6 +26,11 @@ class DatabaseManager:
                                (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media))
         self.conexion.commit()
 
+    def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media):
+        self.cursor.execute("UPDATE Videojuego SET Nombre = ?, Descripción = ?, Tiempo_estimado = ?, Tipo = ?, Completado = ?, Nota_media = ? WHERE id = ?",
+                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, id))
+        self.conexion.commit()
+
     def obtener_lista_juegos(self):
        """
        Devuelve la lista de videojuegos en tuplas.\n
@@ -34,6 +39,13 @@ class DatabaseManager:
        # los obtenemos de la base de datos y se devuelven
        self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego ORDER BY Nombre") # ordenamos por nombre
        return self.cursor.fetchall()
+
+    def obtener_juego(self, id):
+        """
+        Devuelve las propiedades de un videojuego
+        """
+        self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego WHERE id = ?", (id,))
+        return self.cursor.fetchone()
 
     def borrar_juego(self, id):
         self.cursor.execute("DELETE FROM Videojuego WHERE id = ?", (id,))
