@@ -54,8 +54,6 @@ class App:
        # convertir a json
        menu_archivo.add_command(label="Exportar a JSON", command=self.exportar_json)
        menu_archivo.add_command(label="Importar desde JSON", command=self.importar_json)
-       menu_archivo.add_separator() # Una línea separadora
-       menu_archivo.add_command(label="Salir", command=self.ventana.destroy)
 
 
        self.db = DatabaseManager("videojuegos.db")
