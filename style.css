@@ -1,16 +1,28 @@
-p { color: #24264f;}
+p { 
+   color: #24264f;
+}
+
 body {
    background-color: #aeaae7;
    font-family: sans-serif;
 }
+
 article {
    background-color: #ffffff;
-   border: 9px solid #f2c572;
+   border: 5px solid #f2c572;
    max-width: 50%;
    align-content: center;
    border-radius: 6px;
+   padding: 1rem;
+   max-width: 30vw;
 }
 
+section {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   align-items: center;
+}
 
 #titulo {
    text-align: center;
