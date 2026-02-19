@@ -1,0 +1,8 @@
+azul oscuro:     #24264f
+morado:          #4d308c
+violeta:         #8878bf
+violeta claro:   #aeaae7
+amarillo:        #f2c572
+marrón claro:    #a65e44
+marrón:          #593325
+último:          #401935

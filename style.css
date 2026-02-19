@@ -1,0 +1,17 @@
+p { color: #24264f;}
+body {
+   background-color: #aeaae7;
+   font-family: sans-serif;
+}
+article {
+   background-color: #ffffff;
+   border: 9px solid #f2c572;
+   max-width: 50%;
+   align-content: center;
+   border-radius: 6px;
+}
+
+
+#titulo {
+   text-align: center;
+}
