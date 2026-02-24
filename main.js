@@ -1,3 +1,12 @@
+// 1. Seleccionamos el título
+const titulo = document.querySelector("h1");
+
+// 2. Cambiamos su texto
+titulo.textContent = "Nuevo Título Dinámico";
+
+// 3. Cambiamos su color de fondo
+titulo.style.backgroundColor = "yellow";
+
 console.log("Terminal de [Tu Nombre] iniciada con éxito");
 console.warn("Acceso de desarrollador detectado");
 // 1. Seleccionamos el botón
@@ -11,3 +20,11 @@ miBoton.addEventListener("click", function () {
         a.style.transform = "scale(1.03)"
     })
 });
+
+
+
+
+
+
+
+

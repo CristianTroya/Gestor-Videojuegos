@@ -1,3 +1,13 @@
+h3 {
+  font-family: "Geo", sans-serif;
+  font-weight: 1000;
+  font-style: normal;
+  font-size: 40px
+}
+
+
+
+
 p { 
    color: #24264f;
 }
@@ -11,17 +21,17 @@ article {
    background-color: #ffffff;
    border: 5px solid #f2c572;
    max-width: 50%;
-   align-content: center;
    border-radius: 6px;
    padding: 1rem;
    max-width: 30vw;
 }
 
+
 section {
    display: flex;
    flex-wrap: wrap;
    gap: 1rem;
-   align-items: center;
+   
 }
 
 #titulo {
