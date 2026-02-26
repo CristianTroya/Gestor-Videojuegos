@@ -1,20 +1,42 @@
-h3 {
-  font-family: "Geo", sans-serif;
-  font-weight: 1000;
-  font-style: normal;
-  font-size: 40px
-}
-
-
-
-
-p { 
-   color: #24264f;
-}
-
 body {
    background-color: #aeaae7;
    font-family: sans-serif;
+}
+
+
+h3 {
+   font-family: "Geo", sans-serif;
+   font-weight: 1000;
+   font-style: normal;
+   font-size: 40px
+}
+
+.darkmode {
+   background-color: #484572;
+}
+
+header {
+   margin: 0.5rem;
+   display: flex;
+   justify-content: space-between;
+   gap: 1rem;
+}
+
+h1 {
+   flex-grow: 1;
+}
+
+/* btn-modo no puede ser un boton, por tanto es un div */
+#btn-modo {
+   display: inline-block;
+}
+
+#btn-modo:hover {
+   cursor: pointer;
+}
+
+p {
+   color: #24264f;
 }
 
 article {
@@ -24,14 +46,19 @@ article {
    border-radius: 6px;
    padding: 1rem;
    max-width: 30vw;
+   display: flex;
+   flex-direction: column;
 }
 
+article img {
+   align-self: center;
+}
 
 section {
    display: flex;
    flex-wrap: wrap;
    gap: 1rem;
-   
+
 }
 
 #titulo {
