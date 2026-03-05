@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 body {
    background-color: #aeaae7;
-   font-family: sans-serif;
+   font-family: "Rubik", sans-serif;
 }
 
 
@@ -13,6 +15,21 @@ h3 {
 
 .darkmode {
    background-color: #484572;
+   
+   p {
+      color: #dfdfdf;
+   }
+
+   h3 {
+      color: #aeaae7;
+   }
+
+   article {
+      background-color: #24264f;
+      color: #dfdfdf;
+      border: 5px solid #c29a51;
+      box-shadow: 6px 6px 5px 1px rgba(255, 195, 195, 0.2);
+   }
 }
 
 header {
@@ -39,19 +56,32 @@ h1 {
 p { 
    color: #24264f;
 }
+
 article {
    background-color: #ffffff;
    border: 5px solid #f2c572;
-   max-width: 50%;
    border-radius: 6px;
    padding: 1rem;
    max-width: 30vw;
+   min-width: 15%;
    display: flex;
    flex-direction: column;
+   box-shadow: 6px 6px 5px 1px rgba(255, 255, 255, 0.2);
+   transition: 0.1s ease-in
 }
 
-article img {
-   align-self: center;
+article > *:first-child {
+   height: 30%;
+   display: flex;
+   justify-content: center;
+
+   img {
+     object-fit: contain;  
+   }
+}
+
+article:hover {
+   transform: scale(0.99);
 }
 
 section {
@@ -63,4 +93,15 @@ section {
 
 #titulo {
    text-align: center;
+}
+
+footer {
+   position: absolute;
+   bottom: 0;   
+}
+
+@media (max-width: 768px) {
+   article {
+      max-width: 90%;
+   }
 }

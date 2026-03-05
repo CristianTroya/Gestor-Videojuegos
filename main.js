@@ -5,7 +5,7 @@ const titulo = document.querySelector("h1");
 titulo.textContent = "Nuevo Título Dinámico";
 
 // 3. Cambiamos su color de fondo
-titulo.style.backgroundColor = "yellow";
+titulo.style.backgroundColor = "#8878bf";
 
 console.log("Terminal de [Tu Nombre] iniciada con éxito");
 console.warn("Acceso de desarrollador detectado");
@@ -27,6 +27,8 @@ const luna = document.getElementById("luna");
 
 btnModo.addEventListener("click", function () {
     document.body.classList.toggle("darkmode");
+
+    //  claro
     if (sol.hidden === true) {
         sol.hidden = false;
         luna.hidden = true;
