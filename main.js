@@ -7,7 +7,7 @@ titulo.textContent = "Nuevo Título Dinámico";
 // 3. Cambiamos su color de fondo
 titulo.style.backgroundColor = "#8878bf";
 
-console.log("Terminal de [Tu Nombre] iniciada con éxito");
+console.log("Terminal de Carlos, Cristian y Elio iniciada con éxito");
 console.warn("Acceso de desarrollador detectado");
 // 1. Seleccionamos el botón
 const miBoton = document.querySelector("#champiñon");
@@ -17,7 +17,7 @@ miBoton.addEventListener("click", function () {
     const articulos = document.querySelectorAll("article");
 
     articulos.forEach((a) => {
-        a.style.transform = "scale(1.03)"
+        a.style.transform = a.style.transform ? null : "scale(1.03)";
     })
 });
 
@@ -37,5 +37,3 @@ btnModo.addEventListener("click", function () {
         luna.hidden = false;
     }
 })
-
-
