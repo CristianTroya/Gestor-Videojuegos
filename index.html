@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Proyecto Grupal</title>
 </head>
 
@@ -18,7 +18,7 @@
             <img id="luna" src="img/luna.png" height="60" width="60">
         </div>
     </header>
-    <p hidden id="espera">Espere 2s</p>
+
     <main>
         <h2>Sección de la Colección: Listado de mis objetos favoritos.</h2>
         <button id="champiñon" type="button">Escalar</button>
@@ -38,6 +38,7 @@
                     <li>Tipo: SandBox</li>
                 </ul>
                 <a href="https://minecraft.net">Más información</a>
+                <span class="borrar">x</span>
                 
             </article>
             <article>
@@ -55,6 +56,7 @@
                 </ul>
                 <a href="https://hollowknight.com">Más información</a>
                 
+                <span class="borrar">x</span>
             </article>
             <article>
                 <!-- Tercer elemento de la colección -->
@@ -71,15 +73,24 @@
                     <li>Tipo: RPG, combate por turnos</li>
                 </ul>
                 <a href="https://expedition33.com">Más información</a>
+                
+                <span class="borrar">x</span>
             </article>
         </section>
     </main>
+    
+    <dialog id="dialog-borrar">
+        <h3>¿Estás seguro?</h3>
+        <button id="borrar-si">Sí</button>
+        <button id="borrar-no">No</button>
+    </dialog>
 
     <footer>
         <!-- Pie de página -->
         Pie de página: Creado por Carlos, Cristian y Elio.
     </footer>
-    <script src="main.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/borrar.js"></script>
 </body>
 
 </html>

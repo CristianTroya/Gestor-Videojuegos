@@ -27,7 +27,7 @@ const luna = document.getElementById("luna");
 
 btnModo.addEventListener("click", function () {
     document.body.classList.toggle("darkmode");
-
+ 
     //  claro
     if (sol.hidden === true) {
         sol.hidden = false;
