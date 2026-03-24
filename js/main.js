@@ -15,9 +15,15 @@ const miBoton = document.querySelector("#champiñon");
 // 2. Le pedimos que escuche el "click"
 miBoton.addEventListener("click", function () {
     const articulos = document.querySelectorAll("article");
-
+        if(miBoton.textContent == 'Desescalar'){
+        miBoton.textContent = 'Escalar';
+    } else {
+        miBoton.textContent = 'Desescalar';
+    }
     articulos.forEach((a) => {
         a.style.transform = a.style.transform ? null : "scale(1.03)";
+
+
     })
 });
 
