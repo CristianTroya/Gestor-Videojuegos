@@ -146,3 +146,11 @@ footer {
       max-width: 90%;
    }
 }
+
+#btn-scale {
+   display: inline-block;
+   font-size: 1.2rem;
+   border: 3px  #aeaae7;
+   border-radius: 6px;
+   padding: 0.5rem;
+}
