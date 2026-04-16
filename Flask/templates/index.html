@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Proyecto Grupal</title>
 </head>
 
@@ -14,8 +14,8 @@
         <!--  Encabezado -->
         <h1 id="titulo"> Gestor de videojuegos </h1>
         <div id="btn-modo">
-            <img hidden id="sol" src="../../img/sol.png" height="60" width="60">
-            <img id="luna" src="../../img/luna.png" height="60" width="60">
+            <img hidden id="sol" src="{{ url_for('static', filename='img/sol.png') }}" height="60" width="60">
+            <img id="luna" src="{{ url_for('static', filename='img/luna.png') }}" height="60" width="60">
         </div>
     </header>
 
@@ -29,7 +29,7 @@
             <article>
                 <!-- Primer elemento de la colección -->
                 <div>
-                    <img width="200" src="../../img/minecraft_logo.webp" alt="minecraft-logo">
+                    <img width="200" src="{{ url_for('static', filename='img/minecraft_logo.webp') }}" alt="minecraft-logo">
                 </div>
                 <h3>Minecraft</h3>
                 <p>Minecraft es un juego formado por bloques, criaturas y comunidades. La elección es tuya: sobrevivir a
@@ -46,7 +46,7 @@
             <article>
                 <!-- Segundo elemento de la colección -->
                 <div>
-                    <img class="hkimg" width="200" src="../../img/hollow_knight_logo.png" alt="hollowknight-logo">
+                    <img class="hkimg" width="200" src="{{ url_for('static', filename='img/hollow_knight_logo.png') }}" alt="hollowknight-logo">
                 </div>
                 <h3>Hollow Knight</h3>
                 <p>Forja tu propio camino en Hollow Knight! Una aventura épica a través de un vasto reino de insectos y
@@ -63,7 +63,7 @@
             <article>
                 <!-- Tercer elemento de la colección -->
                 <div>
-                    <img class="e33img" width="200" src="../../img/expedition_33_logo.png" alt="expedition33-logo">
+                    <img class="e33img" width="200" src="{{ url_for('static', filename='img/expedition_33_logo.png') }}" alt="expedition33-logo">
                 </div>
                 <h3>Expedition 33</h3>
                 <p>Guía a la expedición 33 en su viaje para destruir a la Peintresse para que no pinte la muerte.
@@ -91,8 +91,8 @@
         <!-- Pie de página -->
         Pie de página: Creado por Carlos, Cristian y Elio.
     </footer>
-    <script src="../../js/main.js"></script>
-    <script src="../../js/borrar.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
 </body>
 
 </html>
