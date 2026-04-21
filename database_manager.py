@@ -16,19 +16,20 @@ class DatabaseManager:
                Tiempo_estimado INTEGER NOT NULL,
                Tipo TEXT NOT NULL,
                Completado INTEGER NOT NULL,
-               Nota_media REAL NOT NULL
+               Nota_media REAL NOT NULL,
+               Imagen TEXT NOT NULL
            )
        """)
        self.conexion.commit()
 
-    def añadir_juego(self, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media):
-        self.cursor.execute("INSERT INTO Videojuego (Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media) VALUES (?, ?, ?, ?, ?, ?)",
-                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media))
+    def añadir_juego(self, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen):
+        self.cursor.execute("INSERT INTO Videojuego (Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen))
         self.conexion.commit()
 
-    def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media):
-        self.cursor.execute("UPDATE Videojuego SET Nombre = ?, Descripción = ?, Tiempo_estimado = ?, Tipo = ?, Completado = ?, Nota_media = ? WHERE id = ?",
-                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, id))
+    def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen):
+        self.cursor.execute("UPDATE Videojuego SET Nombre = ?, Descripción = ?, Tiempo_estimado = ?, Tipo = ?, Completado = ?, Nota_media = ?, Imagen = ? WHERE id = ?",
+                               (titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen, id))
         self.conexion.commit()
 
     def obtener_lista_juegos(self):
@@ -37,14 +38,14 @@ class DatabaseManager:
        (id, Nombre, Descripción...)[]
        """
        # los obtenemos de la base de datos y se devuelven
-       self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego ORDER BY Nombre") # ordenamos por nombre
+       self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media, Imagen FROM Videojuego ORDER BY Nombre") # ordenamos por nombre
        return self.cursor.fetchall()
 
     def obtener_juego(self, id):
         """
         Devuelve las propiedades de un videojuego
         """
-        self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media FROM Videojuego WHERE id = ?", (id,))
+        self.cursor.execute("SELECT id, Nombre, Descripción, Tiempo_estimado, Tipo, Completado, Nota_media, Imagen FROM Videojuego WHERE id = ?", (id,))
         return self.cursor.fetchone()
 
     def borrar_juego(self, id):
