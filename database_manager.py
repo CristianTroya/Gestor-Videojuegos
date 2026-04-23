@@ -1,9 +1,10 @@
-import sqlite3 # Importamos la librería
+import sqlite3, os # Importamos la librería
 
 class DatabaseManager:
     def __init__(self, ruta):
+        db_path = os.path.join(os.path.dirname(__file__), ruta)
 
-        self.conexion = sqlite3.connect(ruta)
+        self.conexion = sqlite3.connect(db_path)
         self.cursor = self.conexion.cursor()
         self.crear_tabla()
 

@@ -144,6 +144,7 @@ class App:
         estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
         rate = tk.Label(frame_añadir, text="Nota media")
         type = tk.Label(frame_añadir, text="Tipo de videojuego")
+        image = tk.Label(frame_añadir, text="Imagen")
 
         # Posicionamos las etiquetas
         title.grid(row=0, column=0)
@@ -151,6 +152,7 @@ class App:
         estimated_time.grid(row=0, column=2)
         rate.grid(row= 2, column=0)
         type.grid(row=2, column=1)
+        image.grid(row=2, column=2)
 
         # Campos rellenables
         title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
@@ -158,6 +160,7 @@ class App:
         estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
         rate_entry = tk.Entry(frame_añadir, text="Nota media")
         type_entry = tk.Entry(frame_añadir, text="Tipo de videojuego")
+        image_entry = tk.Entry(frame_añadir, text="Imagen")
 
         # Casilla marcable
         checkbox_var = tk.BooleanVar()
@@ -169,7 +172,8 @@ class App:
         estimated_entry.grid(row=1, column=2)
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
-        completed_entry.grid(row=3, column=2)
+        image_entry.grid(row=3, column=2)
+        completed_entry.grid(row=3, column=3)
 
         # La usaremos para convertir el True/False de la casilla marcable
         # convertir True  -> 1
@@ -186,6 +190,7 @@ class App:
             estimated_entry.get(),
             rate_entry.get(),
             type_entry.get(),
+            image_entry.get(),
             autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
 
         # Botón para añadir el juego en la pantalla emergente
@@ -195,7 +200,7 @@ class App:
    def ventana_modificar(self, id):
         print("Has presionado modificar (se ha creado una ventana)")
 
-        _, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media = self.db.obtener_juego(id)
+        _, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen = self.db.obtener_juego(id)
 
         # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
@@ -211,6 +216,7 @@ class App:
         estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
         rate = tk.Label(frame_añadir, text="Nota media")
         type = tk.Label(frame_añadir, text="Tipo de videojuego")
+        image = tk.Label(frame_añadir, text="Imagen")
 
         # Posicionamos las etiquetas
         title.grid(row=0, column=0)
@@ -218,6 +224,7 @@ class App:
         estimated_time.grid(row=0, column=2)
         rate.grid(row= 2, column=0)
         type.grid(row=2, column=1)
+        image.grid(row=2, column=2)
 
         # Campos rellenables
         title_entry = tk.Entry(frame_añadir)
@@ -225,6 +232,7 @@ class App:
         estimated_entry= tk.Entry(frame_añadir)
         rate_entry = tk.Entry(frame_añadir)
         type_entry = tk.Entry(frame_añadir)
+        image_entry = tk.Entry(frame_añadir)
 
         # Rellenamos con los datos ya existentes
         title_entry.insert(-1, titulo)
@@ -232,6 +240,7 @@ class App:
         estimated_entry.insert(-1, tiempo_estimado)
         rate_entry.insert(-1, nota_media)
         type_entry.insert(-1, tipo)
+        image_entry.insert(-1, imagen)
 
         # Casilla marcable
         checkbox_var = tk.BooleanVar()
@@ -244,7 +253,8 @@ class App:
         estimated_entry.grid(row=1, column=2)
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
-        completed_entry.grid(row=3, column=2)
+        image_entry.grid(row=3, column=2)
+        completed_entry.grid(row=3, column=3)
 
         # La usaremos para convertir el True/False de la casilla marcable
         # convertir True  -> 1
@@ -262,15 +272,16 @@ class App:
             estimated_entry.get(),
             rate_entry.get(),
             type_entry.get(),
+            image_entry.get(),
             autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
 
         # Botón para añadir el juego en la pantalla emergente
         añadir = tk.Button(nueva_ventana, text="Modificar", command=al_presionar)
         añadir.grid(row=4, column=1)
 
-   def comprobar_campos_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
+   def comprobar_campos_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen):
         # Comprobamos que los campos no estén vacíos
-        for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo]:
+        for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen]:
             if str(parametro) == "":
                 self.mostrar_error() # Mostramos error si está vacío
                 print("Uno o más parámetros están vacíos, no se ha añadido el juego")
@@ -288,17 +299,17 @@ class App:
             print("Tiempo estimado: int, completado: int, nota: real")
             return
         
-   def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
+   def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
 
-        self.db.modificar_juego(id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media)
+        self.db.modificar_juego(id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado modificar juego!")
 
-   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado)
+   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
 
-        self.db.añadir_juego(titulo, descripcion, tiempo_estimado, tipo, completado, nota_media)
+        self.db.añadir_juego(titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado añadir juego!")
 
@@ -326,10 +337,10 @@ class App:
        if len(juegos) == 0:
         juegos = self.db.obtener_lista_juegos()
 
-       juegos.insert(0, ("id", "Titulo", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media"))
+       juegos.insert(0, ("id", "Titulo", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media", "Imagen"))
        for indice, v in enumerate(juegos):
            # Obtenemos los datos de la tupla
-           id, titulo, desc, tiempo_estimado, tipo, completado, nota_media = v
+           id, titulo, desc, tiempo_estimado, tipo, completado, nota_media, imagen = v
 
            # Etiquetas
            etiqueta_titulo = tk.Label(frame, text=titulo, fg='green' if completado == 1 else None)
@@ -337,6 +348,7 @@ class App:
            etiqueta_tiempo_estimado = tk.Label(frame, text=tiempo_estimado, fg='green' if completado == 1 else None)
            etiqueta_nota = tk.Label(frame, text=nota_media, fg='green' if completado == 1 else None)
            etiqueta_tipo = tk.Label(frame, text=tipo, fg='green' if completado == 1 else None)
+           etiqueta_imagen = tk.Label(frame, text=imagen, fg='green' if completado == 1 else None)
 
            # usamos lambda para que el índice se acutlice
            # de ahí que la función al_presionar esté fuera del bucle for
@@ -349,6 +361,7 @@ class App:
            etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=50)
            etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=50)
            etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=50)
+           etiqueta_imagen.grid(row=indice, column=6, sticky="W", padx=50)
 
            if indice != 0:
             etiqueta_editar.grid(row=indice, column=6, sticky="w", padx=50)
@@ -395,7 +408,8 @@ class App:
                 'tiempo_estimado': tarea[3],
                 'tipo': tarea[4],
                 'completado': tarea[5],
-                'nota_media': tarea[6]
+                'nota_media': tarea[6],
+                'imagen': tarea[7]
             }
             lista_de_diccionarios.append(juego)
 
@@ -423,6 +437,7 @@ class App:
                     tarea['tipo'],
                     tarea['completado'],
                     tarea['nota_media'],
+                    tarea['imagen']
                 )
                 # (Nota: esto no importa el estado 'completada' o el 'id', se podría mejorar)
 
