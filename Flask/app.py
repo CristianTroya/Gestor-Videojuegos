@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, os
 from flask import Flask, render_template
 
 # Creamos una instancia de la aplicación. __name__ ayuda a Flask a localizar archivos
@@ -7,7 +7,8 @@ app = Flask(__name__)
 # Definimos una ruta. El símbolo @ es un decorador que vincula la URL con la función de abajo
 @app.route("/") # Cuando el usuario entre en la dirección raíz (home)
 def inicio():
-    conexion = sqlite3.connect("../videojuegos.db")
+    db_path = os.path.join(os.path.dirname(__file__), "../videojuegos.db")
+    conexion = sqlite3.connect(db_path)
 
     # 2. Configuramos la conexión para que devuelva diccionarios (más fácil para Jinja2)
     conexion.row_factory = sqlite3.Row
@@ -21,6 +22,11 @@ def inicio():
 
     # 5. Cerramos la conexión
     conexion.close()
+
+    for item in datos:
+        print(item["Nombre"], item["Descripción"], item["Imagen"])
+
+
 
     return render_template("index.html", items=datos)
 

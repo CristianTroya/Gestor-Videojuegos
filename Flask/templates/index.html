@@ -30,11 +30,11 @@
                 <article>
                     <!-- Primer elemento de la colección -->
                     <div>
-                        <img width="200" src="{{ url_for('static', filename='img/minecraft_logo.webp') }}"
-                            alt="minecraft-logo">
+                        <img width="200" src="{{ url_for('static', filename='img/' + item.imagen) }}"
+                            alt="{{item.imagen}}">
                     </div>
                     <h3>{{ item.nombre }}</h3>
-                    <p>{{ item.descripcion }}</p>
+                    <p>{{ item["Descripción"] }}</p>
                     <ul>
                         <li>Tiempo Estimado: {{ item.tiempo_estimado }}</li>
                         <li>Nota Media: {{ item.nota_media }}/10</li>
