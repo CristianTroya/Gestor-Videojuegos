@@ -33,7 +33,7 @@ class App:
 
    def __init__(self, ventana):
        self.ventana = ventana
-       self.ventana.geometry("920x550")
+       self.ventana.geometry("1300x550")
        self.ventana.title("Gestor de videojuegos")
 
        self.barra_menu = tk.Menu(self.ventana)
@@ -173,7 +173,7 @@ class App:
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
         image_entry.grid(row=3, column=2)
-        completed_entry.grid(row=3, column=3)
+        completed_entry.grid(row=4, column=1)
 
         # La usaremos para convertir el True/False de la casilla marcable
         # convertir True  -> 1
@@ -254,7 +254,7 @@ class App:
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
         image_entry.grid(row=3, column=2)
-        completed_entry.grid(row=3, column=3)
+        completed_entry.grid(row=4, column=2)
 
         # La usaremos para convertir el True/False de la casilla marcable
         # convertir True  -> 1
@@ -364,8 +364,8 @@ class App:
            etiqueta_imagen.grid(row=indice, column=6, sticky="W", padx=50)
 
            if indice != 0:
-            etiqueta_editar.grid(row=indice, column=6, sticky="w", padx=50)
-            etiqueta_borrar.grid(row=indice, column=6, sticky="w", padx=10)
+            etiqueta_editar.grid(row=indice, column=7, sticky="w", padx=50)
+            etiqueta_borrar.grid(row=indice, column=7, sticky="w", padx=10)
 
    def borrar_juego(self, id):
         print("Has pulsado borrar!")
