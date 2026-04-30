@@ -7,11 +7,12 @@ class Videojuego:
    """
    Clase Videojuego, un videojuego dentro del gestor
    """
-   def __init__(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado=0):
+   def __init__(self, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado=0, imagen=None):
        """
        Inicializamos una nueva instancia
        - titulo: el título del juego `string`
-       - descripción: descripción del juego `string`
+       - descripcion_corta: descripción corta del juego `string`
+       - descripcion: descripción del juego `string`
        - tiempo_estimado: tiempo estimado para completar el juego `integer`
        - nota_media: nota media del juego sobre 10 `float`
        - tipo: tipo o género del juego `string`
@@ -26,9 +27,10 @@ class Videojuego:
        self.nota_media = nota_media
        self.tipo = tipo
        self.completado = completado
+       self.imagen = imagen
 
    def __str__(self):
-    return f"[{self.id}] {self.titulo}"
+       return f"[{self.id}] {self.titulo}"
 
 class App:
 
@@ -189,15 +191,26 @@ class App:
 
         # obtenemos todos los campos
         def al_presionar():
+            # Order: titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen
+            titulo_val = title_entry.get()
+            desc_short_val = desc_entry_short.get()
+            desc_val = desc_entry.get()
+            estimated_val = estimated_entry.get()
+            tipo_val = type_entry.get()
+            completado_val = autenticidad(checkbox_var.get())
+            nota_val = rate_entry.get()
+            imagen_val = image_entry.get()
+
             self.añadir_juego(
-            title_entry.get(),
-            desc_entry_short(),
-            desc_entry.get(),
-            estimated_entry.get(),
-            rate_entry.get(),
-            type_entry.get(),
-            image_entry.get(),
-            autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
+                titulo_val,
+                desc_short_val,
+                desc_val,
+                estimated_val,
+                tipo_val,
+                completado_val,
+                nota_val,
+                imagen_val
+            )
 
         # Botón para añadir el juego en la pantalla emergente
         añadir = tk.Button(nueva_ventana, text="Añadir", command=al_presionar)
@@ -206,7 +219,21 @@ class App:
    def ventana_modificar(self, id):
         print("Has presionado modificar (se ha creado una ventana)")
 
-        _, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen = self.db.obtener_juego(id)
+        juego_row = self.db.obtener_juego(id)
+        if juego_row is None:
+            messagebox.showerror("Error", f"No se encontró el juego con id {id}")
+            return
+
+        # Support older DB rows with missing 'Imagen' column (8 fields) or new with 9 fields
+        if len(juego_row) == 9:
+            _, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen = juego_row
+        elif len(juego_row) == 8:
+            _, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media = juego_row
+            imagen = ''
+        else:
+            # unexpected shape
+            messagebox.showerror("Error", "Registro de juego con formato inesperado")
+            return
 
         # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
@@ -255,7 +282,9 @@ class App:
         # Casilla marcable
         checkbox_var = tk.BooleanVar()
         completed_entry = tk.Checkbutton(frame_añadir, text="¿Completado?", variable=checkbox_var)
-        if completado: completed_entry.select()
+        # Set checkbox variable according to stored value
+        if completado:
+            checkbox_var.set(1)
 
         # Posicionamos los campos rellenables y la casilla
         title_entry.grid(row=1, column=0)
@@ -276,28 +305,30 @@ class App:
 
         # obtenemos todos los campos
         def al_presionar():
+            # Order: id, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen
             self.modificar_juego(
-            id,
-            title_entry.get(),
-            desc_entry_short.get(),
-            desc_entry.get(),
-            estimated_entry.get(),
-            rate_entry.get(),
-            type_entry.get(),
-            image_entry.get(),
-            autenticidad(checkbox_var.get())) # Convertimos la variable de la casilla
+                id,
+                title_entry.get(),
+                desc_entry_short.get(),
+                desc_entry.get(),
+                estimated_entry.get(),
+                type_entry.get(),
+                autenticidad(checkbox_var.get()),
+                rate_entry.get(),
+                image_entry.get()
+            )
 
         # Botón para añadir el juego en la pantalla emergente
         añadir = tk.Button(nueva_ventana, text="Modificar", command=al_presionar)
         añadir.grid(row=4, column=1)
 
-   def comprobar_campos_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen):
+   def comprobar_campos_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen):
         # Comprobamos que los campos no estén vacíos
-        for parametro in [titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen]:
+        for parametro in [titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, imagen]:
             if str(parametro) == "":
                 self.mostrar_error() # Mostramos error si está vacío
                 print("Uno o más parámetros están vacíos, no se ha añadido el juego")
-                return
+                return False
         # si intentamos convertir un texto a número nos devolverá un error
         try:
             int(tiempo_estimado)
@@ -309,27 +340,37 @@ class App:
             self.mostrar_error()
             print("Alguno de los campos numéricos no lo son:")
             print("Tiempo estimado: int, completado: int, nota: real")
-            return
+            return False
+        return True
         
-   def modificar_juego(self, id, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
+   def modificar_juego(self, id, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen):
+        ok = self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
+        if not ok:
+            return
 
+        # Database expects: id at end
         self.db.modificar_juego(id, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado modificar juego!")
 
-   def añadir_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
+   def añadir_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen):
+        ok = self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
+        if not ok:
+            return
 
+        # Order matches DatabaseManager.añadir_juego
         self.db.añadir_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado añadir juego!")
 
     # Recorta el texto, lo usamos para la descripción
    def recortar(self, text):
-       if len(text) >= 30:
-           return text[:30] + "..."
-       return text
+           if text is None:
+               return ''
+           s = str(text)
+           if len(s) >= 30:
+               return s[:30] + "..."
+           return s
 
    def mostrar_juegos(self, juegos=[]):
        # siempre usamos el mismo frame declarado en __init__
@@ -347,12 +388,20 @@ class App:
 
        # no se usó el buscador, por tanto mostramos todos los juegos
        if len(juegos) == 0:
-        juegos = self.db.obtener_lista_juegos()
+           juegos = self.db.obtener_lista_juegos()
 
-       juegos.insert(0, ("id", "Titulo", "Descripción_Corta" "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media", "Imagen"))
+       juegos.insert(0, ("id", "Titulo", "Descripción_Corta", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media", "Imagen"))
        for indice, v in enumerate(juegos):
            # Obtenemos los datos de la tupla
-           id, titulo, desc_short, desc, tiempo_estimado, tipo, completado, nota_media, imagen = v
+           # soportamos filas de 8 o 9 elementos (sin/p con 'Imagen')
+           if len(v) == 9:
+               id, titulo, desc_short, desc, tiempo_estimado, tipo, completado, nota_media, imagen = v
+           elif len(v) == 8:
+               id, titulo, desc_short, desc, tiempo_estimado, tipo, completado, nota_media = v
+               imagen = ''
+           else:
+               # saltarse filas con formato inesperado
+               continue
 
            # Etiquetas
            etiqueta_titulo = tk.Label(frame, text=titulo, fg='green' if completado == 1 else None)

@@ -7,6 +7,8 @@ class DatabaseManager:
         self.conexion = sqlite3.connect(db_path)
         self.cursor = self.conexion.cursor()
         self.crear_tabla()
+        # Ensure DB has all expected columns (migration for older DBs)
+        self._ensure_columns()
 
     def crear_tabla(self):
        self.cursor.execute("""
@@ -53,3 +55,17 @@ class DatabaseManager:
     def borrar_juego(self, id):
         self.cursor.execute("DELETE FROM Videojuego WHERE id = ?", (id,))
         self.conexion.commit()
+
+    def _ensure_columns(self):
+        """Add missing columns if database was created with an older schema."""
+        try:
+            self.cursor.execute("PRAGMA table_info(Videojuego)")
+            cols = [row[1] for row in self.cursor.fetchall()]
+            # If Imagen column missing, add it with a default empty string
+            if 'Imagen' not in cols:
+                self.cursor.execute("ALTER TABLE Videojuego ADD COLUMN Imagen TEXT NOT NULL DEFAULT ''")
+                self.conexion.commit()
+        except Exception:
+            # If anything goes wrong here we don't want to crash the app on init;
+            # the code that reads rows will handle missing values defensively.
+            pass
