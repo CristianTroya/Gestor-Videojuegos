@@ -20,6 +20,7 @@ class Videojuego:
 
        self.id = None
        self.titulo = titulo
+       self.descripcion_corta = descripcion_corta
        self.descripcion = descripcion
        self.tiempo_estimado = tiempo_estimado
        self.nota_media = nota_media
@@ -140,6 +141,7 @@ class App:
 
         # Etiquetas
         title = tk.Label(frame_añadir, text="Título del videojuego")
+        desc_short = tk.Label(frame_añadir, text="Descripción corta del videojuego")
         desc = tk.Label(frame_añadir, text="Descripción del videojuego")
         estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
         rate = tk.Label(frame_añadir, text="Nota media")
@@ -148,14 +150,16 @@ class App:
 
         # Posicionamos las etiquetas
         title.grid(row=0, column=0)
-        desc.grid (row=0, column=1)
-        estimated_time.grid(row=0, column=2)
+        desc_short.grid(row=0, column=1)
+        desc.grid (row=0, column=2)
+        estimated_time.grid(row=0, column=3)
         rate.grid(row= 2, column=0)
         type.grid(row=2, column=1)
         image.grid(row=2, column=2)
 
         # Campos rellenables
         title_entry = tk.Entry(frame_añadir, text="Título del videojuego")
+        desc_entry_short = tk.Entry(frame_añadir, text="Descripción corte del videojuego")
         desc_entry = tk.Entry(frame_añadir, text="Descripción del videojuego")
         estimated_entry= tk.Entry(frame_añadir, text="Tiempo estimado para completarlo")
         rate_entry = tk.Entry(frame_añadir, text="Nota media")
@@ -168,8 +172,9 @@ class App:
 
         # Posicionamos los campos rellenables y la casilla
         title_entry.grid(row=1, column=0)
-        desc_entry.grid (row=1, column=1)
-        estimated_entry.grid(row=1, column=2)
+        desc_entry_short.grid(row=1, column=1)
+        desc_entry.grid (row=1, column=2)
+        estimated_entry.grid(row=1, column=3)
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
         image_entry.grid(row=3, column=2)
@@ -186,6 +191,7 @@ class App:
         def al_presionar():
             self.añadir_juego(
             title_entry.get(),
+            desc_entry_short(),
             desc_entry.get(),
             estimated_entry.get(),
             rate_entry.get(),
@@ -200,7 +206,7 @@ class App:
    def ventana_modificar(self, id):
         print("Has presionado modificar (se ha creado una ventana)")
 
-        _, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen = self.db.obtener_juego(id)
+        _, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen = self.db.obtener_juego(id)
 
         # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
@@ -212,6 +218,7 @@ class App:
 
         # Etiquetas
         title = tk.Label(frame_añadir, text="Título del videojuego")
+        desc_short = tk.Label(frame_añadir, text="Descripción corta del videojuego")
         desc = tk.Label(frame_añadir, text="Descripción del videojuego")
         estimated_time = tk.Label(frame_añadir, text="Tiempo estimado para completarlo")
         rate = tk.Label(frame_añadir, text="Nota media")
@@ -220,14 +227,16 @@ class App:
 
         # Posicionamos las etiquetas
         title.grid(row=0, column=0)
-        desc.grid (row=0, column=1)
-        estimated_time.grid(row=0, column=2)
+        desc_short.grid(row=0, column=1)
+        desc.grid (row=0, column=2)
+        estimated_time.grid(row=0, column=3)
         rate.grid(row= 2, column=0)
         type.grid(row=2, column=1)
         image.grid(row=2, column=2)
 
         # Campos rellenables
         title_entry = tk.Entry(frame_añadir)
+        desc_entry_short = tk.Entry(frame_añadir)
         desc_entry = tk.Entry(frame_añadir)
         estimated_entry= tk.Entry(frame_añadir)
         rate_entry = tk.Entry(frame_añadir)
@@ -236,6 +245,7 @@ class App:
 
         # Rellenamos con los datos ya existentes
         title_entry.insert(-1, titulo)
+        desc_entry_short.insert(-1, descripcion_corta)
         desc_entry.insert(-1, descripcion)
         estimated_entry.insert(-1, tiempo_estimado)
         rate_entry.insert(-1, nota_media)
@@ -249,8 +259,9 @@ class App:
 
         # Posicionamos los campos rellenables y la casilla
         title_entry.grid(row=1, column=0)
-        desc_entry.grid (row=1, column=1)
-        estimated_entry.grid(row=1, column=2)
+        desc_entry_short.grid(row=1, column=1)
+        desc_entry.grid (row=1, column=2)
+        estimated_entry.grid(row=1, column=3)
         rate_entry.grid(row=3, column=0)
         type_entry.grid(row=3, column=1)
         image_entry.grid(row=3, column=2)
@@ -268,6 +279,7 @@ class App:
             self.modificar_juego(
             id,
             title_entry.get(),
+            desc_entry_short.get(),
             desc_entry.get(),
             estimated_entry.get(),
             rate_entry.get(),
@@ -279,9 +291,9 @@ class App:
         añadir = tk.Button(nueva_ventana, text="Modificar", command=al_presionar)
         añadir.grid(row=4, column=1)
 
-   def comprobar_campos_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen):
+   def comprobar_campos_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen):
         # Comprobamos que los campos no estén vacíos
-        for parametro in [titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen]:
+        for parametro in [titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen]:
             if str(parametro) == "":
                 self.mostrar_error() # Mostramos error si está vacío
                 print("Uno o más parámetros están vacíos, no se ha añadido el juego")
@@ -299,17 +311,17 @@ class App:
             print("Tiempo estimado: int, completado: int, nota: real")
             return
         
-   def modificar_juego(self, id, titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
+   def modificar_juego(self, id, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
 
-        self.db.modificar_juego(id, titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
+        self.db.modificar_juego(id, titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado modificar juego!")
 
-   def añadir_juego(self, titulo, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
-        self.comprobar_campos_juego(titulo, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
+   def añadir_juego(self, titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, imagen, completado=1):
+        self.comprobar_campos_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, nota_media, tipo, completado, imagen)
 
-        self.db.añadir_juego(titulo, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
+        self.db.añadir_juego(titulo, descripcion_corta, descripcion, tiempo_estimado, tipo, completado, nota_media, imagen)
         self.mostrar_juegos()
         print("Has pulsado añadir juego!")
 
@@ -337,13 +349,14 @@ class App:
        if len(juegos) == 0:
         juegos = self.db.obtener_lista_juegos()
 
-       juegos.insert(0, ("id", "Titulo", "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media", "Imagen"))
+       juegos.insert(0, ("id", "Titulo", "Descripción_Corta" "Descripción", "Tiempo estimado", "Tipo", "Completado", "Nota media", "Imagen"))
        for indice, v in enumerate(juegos):
            # Obtenemos los datos de la tupla
-           id, titulo, desc, tiempo_estimado, tipo, completado, nota_media, imagen = v
+           id, titulo, desc_short, desc, tiempo_estimado, tipo, completado, nota_media, imagen = v
 
            # Etiquetas
            etiqueta_titulo = tk.Label(frame, text=titulo, fg='green' if completado == 1 else None)
+           etiqueta_desc_short = tk.Label(frame, text=self.recortar(desc_short), fg='green' if completado == 1 else None)
            etiqueta_desc = tk.Label(frame, text=self.recortar(desc), fg='green' if completado == 1 else None)
            etiqueta_tiempo_estimado = tk.Label(frame, text=tiempo_estimado, fg='green' if completado == 1 else None)
            etiqueta_nota = tk.Label(frame, text=nota_media, fg='green' if completado == 1 else None)
@@ -357,7 +370,8 @@ class App:
 
            # Posicionamos las etiquetas
            etiqueta_titulo.grid(row=indice, column=0, sticky="w")
-           etiqueta_desc.grid(row=indice, column=1, sticky="w", padx=50)
+           etiqueta_desc_short.grid(row=indice, column=1, sticky="w", padx=50)
+           etiqueta_desc.grid(row=indice, column=2, sticky="w", padx=50)
            etiqueta_tiempo_estimado.grid(row=indice, column=3, sticky="w", padx=50)
            etiqueta_nota.grid(row=indice, column=4, sticky="w", padx=50)
            etiqueta_tipo.grid(row=indice, column=5, sticky="w", padx=50)
@@ -404,12 +418,13 @@ class App:
             juego = {
                 'id': tarea[0],
                 'titulo': tarea[1],
-                'descripcion': tarea[2],
-                'tiempo_estimado': tarea[3],
-                'tipo': tarea[4],
-                'completado': tarea[5],
-                'nota_media': tarea[6],
-                'imagen': tarea[7]
+                'descripcion_corta': tarea[2],
+                'descripcion': tarea[3],
+                'tiempo_estimado': tarea[4],
+                'tipo': tarea[5],
+                'completado': tarea[6],
+                'nota_media': tarea[7],
+                'imagen': tarea[8]
             }
             lista_de_diccionarios.append(juego)
 
@@ -432,6 +447,7 @@ class App:
                 # Insertamos cada tarea en la BD usando las claves del diccionario
                 self.db.añadir_juego(
                     tarea['titulo'],
+                    tarea['descripcion_corta'],
                     tarea['descripcion'],
                     tarea['tiempo_estimado'],
                     tarea['tipo'],
