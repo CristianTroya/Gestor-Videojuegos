@@ -39,7 +39,6 @@
                         <li>Tiempo Estimado: {{ item.tiempo_estimado }}</li>
                         <li>Nota Media: {{ item.nota_media }}/10</li>
                         <li>Tipo: {{ item.tipo }}</li>
-                        <li>Tipo: {{ 'Si' if item.completado == 1 else 'No' }}</li>
                     </ul>
                     <a href="/detalle/{{ item.id }}">Más información</a>
                     <span class="borrar">x</span>
