@@ -20,7 +20,7 @@
 
     <div id="Minecraft">
         <h3>{{ item.nombre }}</h3>
-        <img width="200" src="{{ url_for('static', filename='img/' + item.imagen) }}" alt="{{item.imagen}}">
+        <img id="imagen" width="200" src="{{ url_for('static', filename='img/' + item.imagen) }}" alt="{{item.imagen}}">
         <h4>Descripción: {{ item["Descripción"] }}</h4>
         <li>Estado: {{'Completado' if item.completado == 1 else 'No completado'}}</li>
         <script src="{{ url_for('static', filename='js/noche.js') }}"></script>

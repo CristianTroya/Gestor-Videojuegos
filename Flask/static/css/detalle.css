@@ -14,3 +14,6 @@ header {
     padding: 1rem;
 }
 
+#imagen{
+      filter:invert(1)
+}
