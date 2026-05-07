@@ -36,11 +36,17 @@ class App:
 
    def __init__(self, ventana):
        self.ventana = ventana
-       self.ventana.geometry("1300x550")
        self.ventana.title("Gestor de videojuegos")
+
+       self.ventana.attributes('-fullscreen', True)
+       def salir_fullscreen(event):
+           self.ventana.attributes('-fullscreen', False)
+
+       self.ventana.bind("<Escape>", salir_fullscreen)
 
        self.barra_menu = tk.Menu(self.ventana)
        self.ventana.config(menu=self.barra_menu)
+
 
         # Creamos el menú desplegable "Archivo"
        menu_archivo = tk.Menu(self.barra_menu, tearoff=0)
@@ -136,7 +142,7 @@ class App:
         # La nueva ventana, encima de la principal
         nueva_ventana = tk.Toplevel(self.ventana)
         nueva_ventana.title("Añadir videojuego")
-        nueva_ventana.geometry("700x300")
+        nueva_ventana.geometry("900x300")
 
         frame_añadir = tk.Frame(nueva_ventana)
         frame_añadir.grid(padx=10, pady=10)

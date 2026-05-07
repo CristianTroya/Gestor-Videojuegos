@@ -30,7 +30,7 @@
                 <article>
                     <!-- Primer elemento de la colección -->
                     <div>
-                        <img width="200" src="{{ url_for('static', filename='img/' + item.imagen) }}"
+                        <img id="imagen" width="200" src="{{ url_for('static', filename='img/' + item.imagen) }}"
                             alt="{{item.imagen}}">
                     </div>
                     <h3>{{ item.nombre }}</h3>
