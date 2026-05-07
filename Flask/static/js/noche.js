@@ -2,9 +2,10 @@ const btnModo = document.getElementById("btn-modo");
 const sol = document.getElementById("sol");
 const luna = document.getElementById("luna");
 
-btnModo.addEventListener("click", function () {
+function toggle(esNoche) {
+    console.log(esNoche + "toggle")
     document.body.classList.toggle("darkmode");
- 
+    
     //  claro
     if (sol.hidden === true) {
         sol.hidden = false;
@@ -13,4 +14,17 @@ btnModo.addEventListener("click", function () {
         sol.hidden = true;
         luna.hidden = false;
     }
+
+    const nuevoValor = esNoche == 'true' ? 'false' : 'true';
+    console.log(nuevoValor)
+    localStorage.setItem("darkmode", nuevoValor)
+}
+
+if (localStorage.getItem("darkmode") == 'true') {
+    toggle('false');
+}
+
+btnModo.addEventListener("click", function() {
+    toggle(localStorage.getItem("darkmode"));
+    console.log(localStorage.getItem("darkmode"))
 })

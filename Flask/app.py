@@ -26,9 +26,6 @@ def inicio():
     # 5. Cerramos la conexión
     conexion.close()
 
-    for item in datos:
-        print(item["Nombre"], item["Descripción"], item["Imagen"])
-
     return render_template("index.html", items=datos)
 
 @app.route("/detalle/<int:id_item>")
