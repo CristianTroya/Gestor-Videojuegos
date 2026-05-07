@@ -13,7 +13,8 @@ header {
     gap: 1rem;
     padding: 1rem;
 }
-
+.darkmode{
 #imagen{
       filter:invert(1)
+}
 }
