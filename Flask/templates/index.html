@@ -26,6 +26,7 @@
         </div>
         <section>
             <!-- Aquí va el cuerpo de la página -->
+            {% if items|length > 0 %}
             {% for item in items %}
                 <article>
                     <!-- Primer elemento de la colección -->
@@ -42,9 +43,11 @@
                     </ul>
                     <a href="/detalle/{{ item.id }}">Más información</a>
                     <span class="borrar">x</span>
-
                 </article>
             {% endfor %}
+                {% else %}
+                    <p>No hay objetos en la colección.</p>
+            {% endif %}
         </section>
     </main>
 
