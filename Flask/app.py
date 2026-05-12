@@ -1,5 +1,5 @@
 import sqlite3, os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 # Creamos una instancia de la aplicación. __name__ ayuda a Flask a localizar archivos
 app = Flask(__name__)
@@ -9,16 +9,29 @@ db_path = os.path.join(os.path.dirname(__file__), "../videojuegos.db")
 
 
 # Definimos una ruta. El símbolo @ es un decorador que vincula la URL con la función de abajo
-@app.route("/") # Cuando el usuario entre en la dirección raíz (home)
+@app.route("/", methods=["GET"]) # Cuando el usuario entre en la dirección raíz (home)
 def inicio():
+    # obtenemos la búsqueda, si se ha hecho una
+    query = request.args.get("q", "").lower()
+
+    # Para SQL, buscaremos que contenga query
+    # % indica cualquier cantidad de caracteres
+    # En este caso, ya sea antes o después de query
+    query = "%" + query + "%"
+
     conexion = sqlite3.connect(db_path)
 
     # 2. Configuramos la conexión para que devuelva diccionarios (más fácil para Jinja2)
     conexion.row_factory = sqlite3.Row
     cursor = conexion.cursor()
 
-    # 3. Ejecutamos la consulta SQL
-    cursor.execute("SELECT * FROM Videojuego")
+
+    # 3. Ejecutamos la solicitud
+    # Si se buscó algo, lo filtramos
+    if query: 
+        cursor.execute("SELECT * FROM Videojuego WHERE Nombre LIKE ?", (query,))
+    else:
+        cursor.execute("SELECT * FROM Videojuego")
 
     # 4. Guardamos todos los resultados en una variable
     datos = cursor.fetchall()

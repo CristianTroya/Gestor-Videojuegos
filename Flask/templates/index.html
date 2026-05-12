@@ -24,6 +24,12 @@
         <div id="btn-scale">
             <button id="champiñon" type="button">Escalar</button>
         </div>
+
+        <form method="GET">
+            <input type="text" name="q" placeholder="Buscar..." value="{{ query }}">
+            <button type="submit">Buscar</button>
+        </form>
+
         <section>
             <!-- Aquí va el cuerpo de la página -->
             {% if items|length > 0 %}
