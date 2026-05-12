@@ -17,4 +17,13 @@ header {
 #imagen{
       filter:invert(1)
 }
+#Minecraft {color: #dfdfdf;
+}
+#titulo{
+   color: #dfdfdf !important;
+   text-decoration: none;
+}
+a {
+    color: #18b9b1
+}
 }
